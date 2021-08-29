@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
-import * as Feather from 'feather-icons';
+import { MapModule } from './map/map.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +13,8 @@ import * as Feather from 'feather-icons';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    SharedModule
+    SharedModule,
+    MapModule
   ],
   providers: [],
   bootstrap: [AppComponent]

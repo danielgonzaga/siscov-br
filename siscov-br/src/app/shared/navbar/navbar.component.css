@@ -9,7 +9,28 @@
     padding: 0 5%;
 }
 
+.menu-button {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+}
+
 h3 {
     color: #fff;
     font-weight: bold;
+}
+
+mat-sidenav-container {
+    position: fixed;
+    top: 0;
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    min-width: 100%;
+}
+
+mat-sidenav {
+    position: absolute;
+    background-color: #fff;
+    height: 100%;
 }

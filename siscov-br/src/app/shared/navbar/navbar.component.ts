@@ -12,4 +12,11 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  toggleSideMenu: boolean = false;
+
+  abrir() {
+    this.toggleSideMenu = !this.toggleSideMenu;
+    console.log("toggleSideMenu: ", this.toggleSideMenu);
+  }
+
 }

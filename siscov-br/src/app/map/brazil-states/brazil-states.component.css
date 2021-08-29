@@ -1,0 +1,21 @@
+h1 {
+    margin: 1em 0;
+    text-align: center;
+}
+
+.states-map {
+    text-align: center;
+}
+
+path:hover {
+    cursor: pointer;
+    filter: brightness(0.9);
+}
+
+.acre {
+    fill: yellow;
+}
+
+.rio-de-janeiro {
+    fill: blue
+}
