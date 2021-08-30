@@ -1,0 +1,13 @@
+h1 {
+    margin: 1em 0;
+    text-align: center;
+}
+
+.regions-map {
+    text-align: center;
+}
+
+path:hover {
+    cursor: pointer;
+    filter: brightness(0.9);
+}
