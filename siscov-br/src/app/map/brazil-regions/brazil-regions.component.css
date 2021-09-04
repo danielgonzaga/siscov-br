@@ -1,13 +1,21 @@
-h1 {
+h2 {
     margin: 1em 0;
-    text-align: center;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: space-between;
 }
 
 .regions-map {
-    text-align: center;
+    text-align: left;
 }
 
 path:hover {
     cursor: pointer;
     filter: brightness(0.9);
+}
+
+.accordion {
+    width: 100%;
 }

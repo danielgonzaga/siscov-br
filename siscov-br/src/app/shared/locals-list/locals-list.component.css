@@ -1,0 +1,8 @@
+.accordion-wrapper {
+    width: 100%;
+    margin: 10% 10%;
+}
+
+::ng-deep .p-accordion .p-accordion-header .p-accordion-header-link {
+    background-color: transparent;
+}
