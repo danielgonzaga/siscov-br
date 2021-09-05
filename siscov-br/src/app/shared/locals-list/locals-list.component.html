@@ -1,7 +1,26 @@
-<div class="accordion-wrapper">
+<div class="accordion-wrapper scrollbar-custom">
     <p-accordion>
-        <p-accordionTab *ngFor="let item of items" [header]="item.name">
-           Content 1
+        <p-accordionTab 
+            *ngFor="let item of items" 
+            [header]="item.name" 
+            [selected]="item.isSelected"
+            (click)="verifyAccordionSelection(item)"
+        >
+           <h4>População total</h4>
+           <h3>{{ item.population }}</h3>
+           <h4>Casos totais</h4>
+           <h3>{{ item.totalCases }}</h3>
+           <h4>Número de mortes</h4>
+           <h3>{{ item.totalDeaths }}</h3>
+           <div class="variant-button" *ngIf="item.variantCases">
+               Local muito afetado por <b><u>variantes da COVID-19</u></b>
+           </div>
+           <div class="inner-map-button" (click)="goStatesMap()" *ngIf="item.isRegion">
+                <div>Ver mapa de Estados</div>
+           </div>
+           <div class="inner-map-button" *ngIf="item.isState">
+                <div>Ver mapa de Municípios</div>
+           </div>
         </p-accordionTab>
     </p-accordion>
 </div>

@@ -7,6 +7,7 @@ import { LocalsListComponent } from './locals-list/locals-list.component';
 import { AccordionModule } from 'primeng/accordion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { BrowserModule } from '@angular/platform-browser';
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
+    RouterModule,
     AccordionModule
   ],
   exports: [

@@ -1,13 +1,64 @@
-h1 {
-    margin: 1em 0;
-    text-align: center;
+h2 {
+    margin: 2em 0;
+}
+
+.locals-links {
+    padding-top: 1em;
+    width: 25%;
+    border-top: 1px solid #8d8d8d;
+    text-transform: uppercase;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: space-between;
 }
 
 .states-map {
-    text-align: center;
+    text-align: left;
+    height: 100%;
 }
 
 path:hover {
     cursor: pointer;
     filter: brightness(0.9);
 }
+
+.accordion {
+    width: 100%;
+}
+
+.scrollbar-custom{
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-color: #c4c4c4;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar:horizontal {
+    height: 8px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    border: 1px #c4c4c4;
+    border-radius: 10px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: #c4c4c4; /* change scroll color */
+    border-radius: 16px;
+  }
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background-color:  #888; /* change scroll color :hover; */
+    cursor: pointer;
+  }
+  .scrollbar-custom::-webkit-scrollbar-thumb:active {
+    background-color: #a1a1a1; /* change scroll color on pressing to scroll */
+    border: 1px solid #a1a1a1; /* change scroll border color on pressing to scroll */
+    cursor: pointer;
+  }

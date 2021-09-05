@@ -5,6 +5,7 @@ import { BrazilRegionsComponent } from './brazil-regions/brazil-regions.componen
 import { BrazilStatesComponent } from './brazil-states/brazil-states.component';
 import { BrazilCountiesComponent } from './brazil-counties/brazil-counties.component';
 import { SharedModule } from '../shared/shared.module';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { SharedModule } from '../shared/shared.module';
   ],
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    RouterModule
   ],
   exports: [
     BrazilRegionsComponent,
