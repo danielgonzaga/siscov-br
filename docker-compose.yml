@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+
+    #DATABASE
+    db:
+        image: 'postgres'
+        container_name: db
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=siscov
+        volumes:
+            - ./volume:/var/lib/postgresql/data 
+    
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "siscov@temp.br"
+            PGADMIN_DEFAULT_PASSWORD: "siscov"
+        ports:
+            - "3001:80"
+        depends_on:
+            - db
+    
