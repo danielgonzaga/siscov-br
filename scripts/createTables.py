@@ -2,7 +2,7 @@ import pandas as pd
 from createDatabase import connect_to_db
 
 def create_table(cursor):
-    tables = ("Casos", "Município", "Estado")
+    tables = ("Casos", "Municipio", "Estado")
     
     #Estado
     cursor.execute('''
@@ -36,7 +36,7 @@ def create_table(cursor):
             condicoes VARCHAR(255),
             "evolucaoCaso" VARCHAR(255),
             "classificacaoFinal" VARCHAR(255),
-            idMunicipio integer REFERENCES Município(id),
+            idMunicipio integer REFERENCES Municipio(id),
             PRIMARY KEY (id)
         );
     '''.format(tables[0]))

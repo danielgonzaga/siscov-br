@@ -1,67 +1,69 @@
 urls = {
-    ##acre
-    #'ac': 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ac.csv',
-    #
-    ##alagoas
-    #'al' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-al.csv',
-    #
-    ##amapa
-    #'ap' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ap.csv',
-    #
-    ##amazonas
-    #'am' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-am.csv',
-    #
-    ##bahia
-    #'ba-1' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ba-1.csv',
-    #'ba-2' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ba-2.csv',
-    #'ba-3' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ba-3.csv',
-    #'ba-4' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ba-4.csv',
-    #
-    ##ceara
-    #'ce-1' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ce-1.csv',
-    #'ce-2' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ce-2.csv',
-    #'ce-3' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ce-3.csv',
-    #
-    ##distrito federal
-    #'df' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-df.csv',
-    #
-    ##espirito santo
-    #'es' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-es.csv',
-    #
-    ##goias
-    #'go-1' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-go-1.csv',
-    #'go-2' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-go-2.csv',
-    #'go-3' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-go-3.csv',
-    #
-    ##maranhao
-    #'ma-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-1.csv',
-    #'ma-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-2.csv',
-    #
-    ##mato grosso
-    #'mt' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mt.csv',
-    #
-    ##mato grosso do sul,
-    #'ms-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ms-1.csv',
-    #'ms-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ms-2.csv',
-    #
-    ##minas gerais
-    #'mg-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-1.csv',
-    #'mg-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-2.csv',
-    #'mg-3' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-3.csv',
-    #'mg-4' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-4.csv',
-    #'mg-5' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-5.csv',
-    #'mg-6' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-6.csv',
-    #'mg-7' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-7.csv',
-#
-    ##para
-    #'pa-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pa-1.csv',
-    #'pa-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pa-2.csv',
-#
-    ##paraiba
-    #'pb-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pb-1.csv',
-    #'pb-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pb-2.csv',
-#
-    #parana
+    #acre
+    'ac': 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ac.csv'
+}
+'''
+urls = {
+   #acre
+   'ac': 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ac.csv',
+   #alagoas
+   'al' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-al.csv',
+   
+   #amapa
+   'ap' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ap.csv',
+   
+   #amazonas
+   'am' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-am.csv',
+   
+   #bahia
+   'ba-1' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ba-1.csv',
+   'ba-2' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ba-2.csv',
+   'ba-3' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ba-3.csv',
+   'ba-4' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ba-4.csv',
+   
+   #ceara
+   'ce-1' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ce-1.csv',
+   'ce-2' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ce-2.csv',
+   'ce-3' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ce-3.csv',
+   
+   #distrito federal
+   'df' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-df.csv',
+   
+   #espirito santo
+   'es' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-es.csv',
+   
+   #goias
+   'go-1' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-go-1.csv',
+   'go-2' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-go-2.csv',
+   'go-3' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-go-3.csv',
+   
+   #maranhao
+   'ma-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-1.csv',
+   'ma-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-2.csv',
+   
+   #mato grosso
+   'mt' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mt.csv',
+   
+   #mato grosso do sul,
+   'ms-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ms-1.csv',
+   'ms-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ms-2.csv',
+   
+   #minas gerais
+   'mg-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-1.csv',
+   'mg-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-2.csv',
+   'mg-3' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-3.csv',
+   'mg-4' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-4.csv',
+   'mg-5' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-5.csv',
+   'mg-6' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-6.csv',
+   'mg-7' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mg-7.csv',
+   #para
+   'pa-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pa-1.csv',
+   'pa-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pa-2.csv',
+   #paraiba
+   'pb-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pb-1.csv',
+   'pb-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pb-2.csv',
+
+#   #parana
 #    'pr-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pr-1.csv',
 #    'pr-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-pr-2.csv',
 
@@ -130,4 +132,5 @@ urls = {
     'sp-14' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-sp-14.csv',
     'sp-15' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-sp-15.csv',
     'sp-16' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-sp-16.csv'
-}
+    
+}'''

@@ -3,40 +3,59 @@ from csvUrls import urls
 from createDatabase import connect_to_db
 import numpy as np
 
+col_names = ['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'idade', 'evolucaoCaso', 'classificacaoFinal']
+
 def insertIntoTable(conn, cursor, dataset, tableCasos, tableEstado, tableMunicipio):
     for row in dataset.index:
         #transform NaN age values
         if np.isnan(dataset['idade'][row]):
             dataset['idade'][row] = 0
         
+        #print("Inserindo linha: ")
+
+        stateName = (dataset['estado'][row])
         #estado
-        cursor.execute("INSERT INTO " + tableEstado + " (nome) VALUES (%s)", (dataset['estado'][row]))
-        cursor.execute("SELECT id FROM Estado  WHERE nome='(%s)'", (dataset['estado'][row]))
+        cursor.execute("INSERT INTO estado(nome) VALUES (%s) ON CONFLICT DO NOTHING", (stateName,))
+        cursor.execute("SELECT CURRVAL(pg_get_serial_sequence('estado', 'id'))")
         idEstado = cursor.fetchone()
+        #print(idEstado)
         
         #municipio
-        cursor.execute("INSERT INTO " + tableMunicipio + " (nome, idEstado) VALUES (%s, %s)", (dataset['municipio'][row]), idEstado)
-        cursor.execute("SELECT id FROM Municipio  WHERE nome='($s)'", (dataset['municipio'][row]))
+        cursor.execute("INSERT INTO municipio(nome, idEstado) VALUES (%s, %s) ON CONFLICT DO NOTHING", ((dataset['municipio'][row]), idEstado))
+        cursor.execute("SELECT CURRVAL(pg_get_serial_sequence('municipio', 'id'))")
         idMun = cursor.fetchone()
 
         #casos
         cursor.execute(
-            "INSERT INTO " + tableCasos + " VALUES (%s, %s, %s, %s, %s, %s, %s)", (dataset['id'][row], dataset['dataNotificacao'][row], dataset['dataInicioSintomas'][row], dataset['idade'][row], dataset['condicoes'][row], dataset['evolucaoCaso'][row], dataset['classificacaoFinal'][row], idMun)
+            "INSERT INTO casos VALUES (%s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT DO NOTHING", (dataset['id'][row], dataset['dataNotificacao'][row], dataset['dataInicioSintomas'][row], dataset['idade'][row], dataset['condicoes'][row], dataset['evolucaoCaso'][row], dataset['classificacaoFinal'][row], idMun)
         )
+        
+        print(row)
 
     conn.commit()
 
+def defineTypes(df):
+  
+    #df[['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'evolucaoCaso', 'classificacaoFinal']] = df[['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'evolucaoCaso', 'classificacaoFinal']].astype(str)
+
+    df[["idade"]] = df[["idade"]].apply(pd.to_numeric)
+
+    return df 
+
 if __name__ == '__main__':
-    dbVar = connect_to_db(None)
+    dbVar = connect_to_db("casos_covid")
     connection = dbVar[0]
     cursor = dbVar[1]
 
 
     for key,value in urls.items():
-        print(key, ':', value)
-        tp = pd.read_csv('./'+ key + '.csv', skiprows=1, usecols=['id', 'dataNotificacao', 'dataInicioSintomas', 'estado', 'municipio', 'idade', 'condicoes', 'evolucaoCaso', 'classificacaoFinal'], encoding="ISO-8859-1", sep='\t', engine='python', chunksize=10000, iterator=True)
+        tp = pd.read_csv('./datasets/'+ key + '.csv', skiprows=1, names=col_names, encoding="UTF-8", sep='\t', engine='python', chunksize=10000, iterator=True)
 
         df = pd.concat(tp)
-
+        #df[["idade"]] = df[["idade"]].apply(pd.to_numeric) 
+        df = defineTypes(df)
+        #print(df.dtypes)
+        print("Inserting: ", key)
         insertIntoTable(connection, cursor, df, 'Casos', 'Estado', 'Municipio')
+        print(key, " sucessfully inserted!!")
         
