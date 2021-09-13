@@ -11,14 +11,11 @@ def insertIntoTable(conn, cursor, dataset, tableCasos, tableEstado, tableMunicip
         if np.isnan(dataset['idade'][row]):
             dataset['idade'][row] = 0
         
-        #print("Inserindo linha: ")
-
         stateName = (dataset['estado'][row])
         #estado
         cursor.execute("INSERT INTO estado(nome) VALUES (%s) ON CONFLICT DO NOTHING", (stateName,))
         cursor.execute("SELECT CURRVAL(pg_get_serial_sequence('estado', 'id'))")
         idEstado = cursor.fetchone()
-        #print(idEstado)
         
         #municipio
         cursor.execute("INSERT INTO municipio(nome, idEstado) VALUES (%s, %s) ON CONFLICT DO NOTHING", ((dataset['municipio'][row]), idEstado))
@@ -35,9 +32,6 @@ def insertIntoTable(conn, cursor, dataset, tableCasos, tableEstado, tableMunicip
     conn.commit()
 
 def defineTypes(df):
-  
-    #df[['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'evolucaoCaso', 'classificacaoFinal']] = df[['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'evolucaoCaso', 'classificacaoFinal']].astype(str)
-
     df[["idade"]] = df[["idade"]].apply(pd.to_numeric)
 
     return df 
@@ -52,9 +46,7 @@ if __name__ == '__main__':
         tp = pd.read_csv('./datasets/'+ key + '.csv', skiprows=1, names=col_names, encoding="UTF-8", sep='\t', engine='python', chunksize=10000, iterator=True)
 
         df = pd.concat(tp)
-        #df[["idade"]] = df[["idade"]].apply(pd.to_numeric) 
         df = defineTypes(df)
-        #print(df.dtypes)
         print("Inserting: ", key)
         insertIntoTable(connection, cursor, df, 'Casos', 'Estado', 'Municipio')
         print(key, " sucessfully inserted!!")
