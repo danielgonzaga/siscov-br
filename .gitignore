@@ -3,4 +3,4 @@
 ./scripts/datasets
 ./scripts/venv
 ./scripts/volume
-./scripts/__pycache__
+__pycache__/
