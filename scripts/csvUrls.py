@@ -1,11 +1,11 @@
-urls = {
+'''urls = {
     #acre
     'ac': 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ac.csv'
-}
-'''
+}'''
+
 urls = {
    #acre
-   'ac': 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ac.csv',
+   #'ac': 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ac.csv',
    #alagoas
    'al' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-al.csv',
    
@@ -133,4 +133,4 @@ urls = {
     'sp-15' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-sp-15.csv',
     'sp-16' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-sp-16.csv'
     
-}'''
+}
