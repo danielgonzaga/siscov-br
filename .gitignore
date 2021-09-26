@@ -1,3 +1,6 @@
 ./siscov-br/node_modules
 ./volume
 ./scripts/datasets
+./scripts/venv
+./scripts/volume
+./scripts/__pycache__
