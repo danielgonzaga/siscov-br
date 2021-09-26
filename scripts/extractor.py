@@ -12,18 +12,7 @@ def download_csv(url):
     df = pd.concat(tp)
 
     return df
-'''
-def insertIntoTable(conn, cursor, dataset, table):
-    for row in dataset.index:
-        #transform NaN age values
-        if np.isnan(dataset['idade'][row]):
-            dataset['idade'][row] = 0
-        cursor.execute(
-            "INSERT INTO " + table + " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (dataset['id'][row], dataset['dataNotificacao'][row], dataset['dataInicioSintomas'][row], dataset['estado'][row], dataset['municipio'][row], dataset['idade'][row], dataset['condicoes'][row], dataset['evolucaoCaso'][row], dataset['classificacaoFinal'][row])
-        )
 
-    conn.commit()
-'''
 if __name__ == '__main__':
     
     for key,value in urls.items():
@@ -32,6 +21,4 @@ if __name__ == '__main__':
         print("Download Completed!")
         dataset.to_csv('./datasets/' + key + ".csv", sep='\t', index=False)
   
-    #insert into table
-    #insertIntoTable(dbConnection, dbCursor, dataset, "casos_norte")
     
