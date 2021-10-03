@@ -1,6 +1,6 @@
-/SiscovWebApp/node_modules
-/volume
-/SiscovFlask/datasets/*
-/SiscovFlask/volume
+SiscovWebApp/node_modules
+SiscovFlask/datasets/*
+!SiscovFlask/datasets/.gitkeep
 __pycache__
+volume
 venv
