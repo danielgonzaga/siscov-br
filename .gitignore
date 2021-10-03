@@ -1,6 +1,6 @@
-./siscov-br/node_modules
+./SiscovWebApp/node_modules
 ./volume
-./scripts/datasets
-./scripts/venv
-./scripts/volume
+./SiscovFlask/datasets
+./SiscovFlask/venv
+./SiscovFlask/volume
 __pycache__/
