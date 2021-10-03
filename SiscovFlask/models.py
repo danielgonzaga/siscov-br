@@ -1,12 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-serv = Flask(__name__)
+app = Flask(__name__)
 # dialect+driver://username:password@host:port/database
-serv.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:5432/casos_covid'
-serv.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:5432/casos_covid'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(serv)
+db = SQLAlchemy(app)
 
 class Estado(db.Model):
     id = db.Column(db.Integer, primary_key=True)

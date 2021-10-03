@@ -1,7 +1,7 @@
 from models import *
 
 
-db.init_app(serv)
+db.init_app(app)
 
 
 def main():

@@ -1,14 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-
-#sql
-#dialect+driver://username:password@host:port/database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:siscov@localhost:5432/casos_covid'
+from models import app
 
 #routes
-
 '''@app.route('/')
 #renderiza o html passado 
 def index():
