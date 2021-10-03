@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 serv = Flask(__name__)
+#dialect+driver://username:password@host:port/database
 serv.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:5432/teste'
 serv.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
