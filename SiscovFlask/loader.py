@@ -1,98 +1,98 @@
 import pandas as pd
 from csvUrls import urls
-from createDatabase import connect_to_db
 import numpy as np
+from models import Estado, Municipio, Casos, db
 
 col_names = ['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'idade', 'evolucaoCaso', 'classificacaoFinal']
 
-def insertIntoTable(conn, cursor, dataset, tableCasos, tableEstado, tableMunicipio):
+def insertIntoTable(dataset, state_name):
+    # States
+    existState(state_name)
+    
     for row in dataset.index:
-        #transform NaN age values
-        if np.isnan(dataset['idade'][row]):
-            dataset['idade'][row] = 0
+        # Declare variables
+        age = dataset['idade'][row]
+        county_name = dataset['municipio'][row]
+        case_id = dataset['id'][row]
+        notification_date = dataset['dataNotificacao'][row]
+        symptoms_date = dataset['dataInicioSintomas'][row]
+        conditions = dataset['condicoes'][row]
+        case_evolution = dataset['evolucaoCaso'][row]
+        final_classification = dataset['classificacaoFinal'][row]
         
-        #transform nan county values
-        if dataset['municipio'][row] != dataset['municipio'][row]:
-            dataset['municipio'][row] = "Desconhecido"
-
-        #estado
-        stateName = (dataset['estado'][row])
-        #insert if not exists an ocurrence
-        stateExists = existState(cursor, stateName)
-
-        if stateExists == False:
-            cursor.execute("INSERT INTO estado(nome) VALUES (%s)", (stateName,))
-        #cursor.execute("SELECT CURRVAL(pg_get_serial_sequence('estado', 'id'))")
-        cursor.execute("SELECT id FROM estado WHERE nome = (%s)", (stateName,))
-        idEstado = cursor.fetchone()[0]
-        #print(idEstado)
+        # Transform NaN age values
+        if np.isnan(age):
+            age = 0
         
-        #municipio
-        countyExists = existCounty(cursor, dataset['municipio'][row], idEstado)
+        # Transform NaN county values
+        if county_name != county_name:
+            county_name = "Desconhecido"
 
-        if countyExists == False:
-            cursor.execute("INSERT INTO municipio(nome, idEstado) VALUES (%s, %s)", ((dataset['municipio'][row]), idEstado))
-        #cursor.execute("SELECT CURRVAL(pg_get_serial_sequence('municipio', 'id'))")
-        cursor.execute("SELECT municipio.id FROM municipio JOIN estado ON municipio.idestado = estado.id WHERE municipio.nome = (%s) AND estado.id = (%s)", ((dataset['municipio'][row]), idEstado))
-        print("TESTE ", idEstado)
-        print("TESTE ",dataset['municipio'][row])
-        idMun = cursor.fetchone()[0]
-        print(idMun)
-
-        #casos
-        caseExist = existCase(cursor, dataset['id'][row])
-        #insert only if not exists
-        if caseExist == False:
-            cursor.execute(
-                "INSERT INTO casos VALUES (%s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT DO NOTHING", (dataset['id'][row], dataset['dataNotificacao'][row], dataset['dataInicioSintomas'][row], dataset['idade'][row], dataset['condicoes'][row], dataset['evolucaoCaso'][row], dataset['classificacaoFinal'][row], idMun)
-            )
+        print("row:", row)
         
-        print(row)
+        # County
+        state_id = getStateId(state_name)
+        existCounty(county_name, state_id)
 
-    conn.commit()
+        # Casos
+        county_id = getCountyId(county_name)
+        exist_case = existCase(case_id)
 
-def defineType(df):
-    df[["idade"]] = df[["idade"]].apply(pd.to_numeric)
-    return df 
+        # Insert only if not exists
+        if exist_case == False:
+            insertCase(case_id, notification_date, symptoms_date, age, conditions, case_evolution, final_classification, county_id)
+        #     cursor.execute(
+        #         "INSERT INTO casos VALUES (%s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT DO NOTHING", (dataset['id'][row], dataset['dataNotificacao'][row], dataset['dataInicioSintomas'][row], dataset['idade'][row], dataset['condicoes'][row], dataset['evolucaoCaso'][row], dataset['classificacaoFinal'][row], idMun)
+        #     )
+        
 
-def existState(cursor, columnName):
-    cursor.execute("SELECT count(id) FROM estado WHERE nome = (%s)", (columnName,))
-    count = cursor.fetchone()[0]
-    print("state : ", count)
-    if count == 0:
+
+def existState(state_name):
+    state = Estado.query.filter_by(nome=state_name).first()
+    print("state query:", state)
+    if not state:
+        insertState(state_name)
+
+def insertState(state_name):
+    state_to_be_created = Estado(nome=state_name)
+    db.session.add(state_to_be_created)
+    db.session.commit()
+
+def getStateId(state_name):
+    return Estado.query.filter_by(nome=state_name).first().id
+
+
+def existCounty(county_name, state_id):
+    county = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Municipio.nome==county_name).filter(Estado.id==state_id).first()
+    if not county:
+        insertCounty(county_name, state_id)
+
+def insertCounty(county_name, state_id):
+    county_to_be_created = Municipio(nome=county_name, estado_id=state_id)
+    db.session.add(county_to_be_created)
+    db.session.commit()
+
+def getCountyId(county_name):
+    return Municipio.query.filter_by(nome=county_name).first().id
+
+def existCase(case_id):
+    case = Casos.query.filter_by(id=case_id).first()
+    if not case:
         return False
     else:
         return True
 
-def existCounty(cursor, columnName, idEstado):
-    cursor.execute("SELECT count(municipio.id) FROM municipio JOIN estado ON municipio.idestado = estado.id WHERE municipio.nome = (%s) AND estado.id = (%s)", (columnName,idEstado))
-    count = cursor.fetchone()[0]
-    print("county : ", count)
-    if count == 0:
-        return False
-    else:
-        return True
-
-def existCase(cursor, id):
-    cursor.execute("SELECT count(id) FROM casos WHERE id = (%s)", (id,))
-    count = cursor.fetchone()[0]
-    print("county : ", count)
-    if count == 0:
-        return False
-    else:
-        return True
+def insertCase(case_id, notification_date, symptoms_date, age, conditions, case_evolution, final_classification, county_id):
+    case_to_be_created = Casos(id=case_id, dataNotificacao=notification_date, dataInicioSintomas=symptoms_date, idade=age, condicoes=conditions, evolucaoCaso=case_evolution, classificacaoFinal=final_classification, municipio_id=county_id)
+    db.session.add(case_to_be_created)
+    db.session.commit()
 
 if __name__ == '__main__':
-    dbVar = connect_to_db("casos_covid")
-    connection = dbVar[0]
-    cursor = dbVar[1]
-
     for key,value in urls.items():
-        tp = pd.read_csv('./datasets/'+ key + '.csv', skiprows=1, names=col_names, encoding="UTF-8", sep='\t', engine='python', chunksize=10000, iterator=True)
-
-        df = pd.concat(tp)
-        df = defineType(df)
-        print(df.dtypes)
-        print("Inserting: ", key)
-        insertIntoTable(connection, cursor, df, 'Casos', 'Estado', 'Municipio')
-        print(key, " sucessfully inserted!!")
+        for k, v in value.items():
+            tp = pd.read_csv('./datasets/'+ k + '.csv', skiprows=1, names=col_names, encoding="UTF-8", sep='\t', engine='python', chunksize=10000, iterator=True)
+            df = pd.concat(tp)
+            print(df.dtypes)
+            print("Inserting: ", key)
+            insertIntoTable(df, key)
+        print(key, "cases sucessfully updated!")
