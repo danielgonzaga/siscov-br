@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+import pip._vendor.requests as req
 from models import *
 
 # Routes
@@ -41,6 +42,16 @@ def findAllStates():
         jsonified_result = jsonify(result)
         return jsonify(result)
 
+#testando pegar dado externo da api do ibge
+@app.route('/api/teste')
+def get_external():
+    #Obtém a projecao da população para as localidades: Brasil (código BR ou 0), Grandes Regiões (códigos de 1 a 5) e Unidades da Federação (código numérico).
+    #1 - Norte, 2 - Nordeste, 3 - Sudeste, 4 - Sul, 5 - Centro-Oeste
+    #populacao do Norte do país
+    result = req.get('https://servicodados.ibge.gov.br/api/v1/projecoes/populacao/1')
+    data = result.text
+    print(data)
+    return data
 
 if __name__ == '__main__':
     app.run()
