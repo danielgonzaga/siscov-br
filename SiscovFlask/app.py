@@ -49,8 +49,9 @@ def get_external():
     #1 - Norte, 2 - Nordeste, 3 - Sudeste, 4 - Sul, 5 - Centro-Oeste
     #populacao do Norte do país
     result = req.get('https://servicodados.ibge.gov.br/api/v1/projecoes/populacao/1')
-    data = result.text
+    data = result.json()
     print(data)
+    print(data.get('projecao').get('populacao'))
     return data
 
 if __name__ == '__main__':
