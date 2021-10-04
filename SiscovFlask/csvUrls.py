@@ -1,6 +1,6 @@
 urls = {
    #acre
-   # 'Acre': {'ac': 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ac.csv'},
+   'Acre': {'ac': 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ac.csv'},
    
    #alagoas
 #    'al' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-al.csv',
@@ -36,9 +36,8 @@ urls = {
 #    'go-3' : 'https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-go-3.csv',
    
 #    #maranhao
-     'Maranhao': {'ma-1': 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-1.csv', 'ma-2': 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-2.csv'},
-#    'ma-1' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-1.csv',
-#    'ma-2' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-2.csv',
+   #   'Maranhao': {'ma-1': 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-1.csv', 'ma-2': 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-ma-2.csv'},
+
    
 #    #mato grosso
 #    'mt' : 'https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/dados-mt.csv',

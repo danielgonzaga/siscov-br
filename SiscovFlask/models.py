@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 # dialect+driver://username:password@host:port/database
@@ -7,7 +8,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
+ma = Marshmallow(app)
 class Estado(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(200), nullable=False)
@@ -45,3 +46,7 @@ class Casos(db.Model):
         self.evolucaoCaso = evolucaoCaso
         self.classificacaoFinal = classificacaoFinal
         self.municipio_id = municipio_id
+
+class EstadoSchema(ma.Schema):
+    class Meta:
+        fields=('id', 'nome', 'isRegion')
