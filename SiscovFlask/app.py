@@ -19,9 +19,18 @@ from models import *
 state_schema = EstadoSchema()
 states_schema = EstadoSchema(many=True)
 
-#get region
+@app.route('/region')
+def findNational():
+    all_states = Estado.query.all()
+    result = states_schema.dump(all_states)
+
+    total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).count()
+
+    return jsonify(result)
+
+#get region by id
 @app.route('/region/<region_id>')
-def findRegion(region_id):
+def findRegionById(region_id):
     if request.method == 'GET':
         all_states = Estado.query.all()
         result = states_schema.dump(all_states)
@@ -66,6 +75,26 @@ def findAllStates():
         jsonified_result = jsonify(result)
         return jsonify(result)
 
+#specific state
+@app.route("/state/<state_id>")
+def findStateByName(state_id):
+    result = Estado.query.filter(Estado.nome == state_id).first()
+
+    return result
+
+#all counties from state
+@app.route("/state/<state_id>/county")
+def findCounties(state_id):
+    result = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.nome == state_id).all()
+
+    return result
+
+#get specific county
+@app.route("/state/<state_id>/county/<county_id>")
+def findCountyByName(state_id, county_id):
+    result = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.nome == state_id).filter(Municipio.nome == county_id).all()
+    
+    return result
 
 #testando pegar dado externo da api do ibge
 #@app.route('/api/teste')
