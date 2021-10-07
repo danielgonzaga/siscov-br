@@ -42,8 +42,8 @@ def insertIntoTable(dataset, state_name):
         county_id = getCountyId(county_name)
         exist_case = existCase(case_id)
 
-        # Insert only if not exists
-        if exist_case == False:
+        # Insert only if not exists and county_id is valid
+        if exist_case == False and county_id != -1:
             insertCase(case_id, notification_date, symptoms_date, age, conditions, case_evolution, final_classification, county_id)
         
 def existState(state_name):
@@ -65,7 +65,8 @@ def existCounty(county_name, state_id, state_name):
     county = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Municipio.nome==county_name).filter(Estado.id==state_id).first()
     if not county:
         population = getCountyPopulation(county_name, state_name)
-        insertCounty(county_name, state_id, population)
+        if population != 0:
+            insertCounty(county_name, state_id, population)
 
 def getCountyPopulation(county_name, state_name):
     state_uf = getStateUFId(state_name)
@@ -86,7 +87,11 @@ def insertCounty(county_name, state_id, population):
     db.session.commit()
 
 def getCountyId(county_name):
-    return Municipio.query.filter_by(nome=county_name).first().id
+    county =  Municipio.query.filter_by(nome=county_name).first()
+    if county:
+        return county.id
+    else:
+        return -1
 
 def existCase(case_id):
     case = Casos.query.filter_by(id=case_id).first()
