@@ -49,4 +49,4 @@ class Casos(db.Model):
 
 class EstadoSchema(ma.Schema):
     class Meta:
-        fields=('id', 'nome', 'isRegion')
+        fields=('id', 'nome')

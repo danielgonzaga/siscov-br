@@ -71,7 +71,17 @@ def findAllStates():
             state['totalCases']=total_cases
 
             # Getting total deaths per State
+            total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).filter(Casos.evolucaoCaso=='Óbito').count()
+            state['totalDeaths']=total_deaths
 
+            state_id = getStateId(state['nome'])
+            population=0
+            if state_id != 0:
+                population=getStatesPopulation(state_id)
+            state['population']=population
+            
+            state['color']=colorCalculation(population, total_cases)
+            
         jsonified_result = jsonify(result)
         return jsonify(result)
 
@@ -98,15 +108,13 @@ def findCountyByName(state_id, county_id):
 
 #testando pegar dado externo da api do ibge
 #@app.route('/api/teste')
-def getExternal():
+def getStatesPopulation(state_id):
     #Obtém a projecao da população para as localidades: Brasil (código BR ou 0), Grandes Regiões (códigos de 1 a 5) e Unidades da Federação (código numérico).
     #1 - Norte, 2 - Nordeste, 3 - Sudeste, 4 - Sul, 5 - Centro-Oeste
     #populacao do Norte do país
-    result = req.get('https://servicodados.ibge.gov.br/api/v1/projecoes/populacao/1')
+    result = req.get('https://servicodados.ibge.gov.br/api/v1/projecoes/populacao/{}'.format(state_id))
     data = result.json()
-    print(data)
-    print(data.get('projecao').get('populacao'))
-    return data
+    return data.get('projecao').get('populacao')
 
 def getRegionsStates(id):
     #TO DO: replicar pras demais regioes 
@@ -127,6 +135,26 @@ def getRegionsStates(id):
     elif id == 5:
         #goias, mato grosso, mato grosso do sul
         print("centro-oeste")
+
+def getStateId(state_name):
+    state_dict = {11: 'Rondonia', 12: 'Acre', 13: 'Amazonas', 14: 'Roraima', 15: 'Para', 16: 'Amapa', 17: 'Tocantins', 21: 'Maranhao', 22: 'Piaui', 23: 'Ceara', 24: 'Rio Grande do Norte', 25: 'Paraiba', 26: 'Pernambuco', 27: 'Alagoas', 28: 'Sergipe', 29: 'Bahia', 31: 'Minas Gerais', 32: 'Espirito Santo', 33: 'Rio de Janeiro', 35: 'Sao Paulo', 41: 'Parana', 42: 'Santa Catarina', 43: 'Rio Grande do Sul', 50: 'Mato Grosso do Sul', 51: 'Mato Grosso', 52: 'Goias', 53: 'Distrito Federal'}
+    state_id = 0
+    for key, value in state_dict.items():
+        if value == state_name:
+            state_id = key
+    return state_id
+
+def colorCalculation(population, total_cases):
+    calculation = total_cases/population
+    color = ''
+    print("calculation: ", calculation)
+    if calculation >= 0 and calculation < 0.35:
+        color = 'blue'
+    elif calculation >= 0.35 and calculation < 75:
+        color = 'yellow'
+    elif calculation >= 75:
+        color = 'red'
+    return color
 
 if __name__ == '__main__':
     app.run()
