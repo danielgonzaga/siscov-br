@@ -20,11 +20,13 @@ class Estado(db.Model):
 class Municipio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(200), nullable=False)
+    populacao = db.Column(db.Integer)
     estado_id = db.Column(db.Integer, db.ForeignKey('estado.id'))
     casos = db.relationship('Casos', backref='municipio')
 
-    def __init__(self, nome, estado_id):
+    def __init__(self, nome, populacao, estado_id):
         self.nome = nome
+        self.populacao = populacao
         self.estado_id = estado_id
 
 class Casos(db.Model):

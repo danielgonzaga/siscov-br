@@ -2,8 +2,12 @@ import pandas as pd
 from csvUrls import urls
 import numpy as np
 from models import Estado, Municipio, Casos, db
+from utils import getStateUFId
 
 col_names = ['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'idade', 'evolucaoCaso', 'classificacaoFinal']
+
+counties_names = ['UF', 'nome', 'populacao']
+counties_csv = pd.read_csv('./utils/PopulacaoMunicipios.csv', skiprows=1, encoding="UTF-8", names=counties_names, sep=';')
 
 def insertIntoTable(dataset, state_name):
     # States
@@ -32,7 +36,7 @@ def insertIntoTable(dataset, state_name):
         
         # County
         state_id = getStateId(state_name)
-        existCounty(county_name, state_id)
+        existCounty(county_name, state_id, state_name)
 
         # Casos
         county_id = getCountyId(county_name)
@@ -41,12 +45,7 @@ def insertIntoTable(dataset, state_name):
         # Insert only if not exists
         if exist_case == False:
             insertCase(case_id, notification_date, symptoms_date, age, conditions, case_evolution, final_classification, county_id)
-        #     cursor.execute(
-        #         "INSERT INTO casos VALUES (%s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT DO NOTHING", (dataset['id'][row], dataset['dataNotificacao'][row], dataset['dataInicioSintomas'][row], dataset['idade'][row], dataset['condicoes'][row], dataset['evolucaoCaso'][row], dataset['classificacaoFinal'][row], idMun)
-        #     )
         
-
-
 def existState(state_name):
     state = Estado.query.filter_by(nome=state_name).first()
     print("state query:", state)
@@ -62,13 +61,27 @@ def getStateId(state_name):
     return Estado.query.filter_by(nome=state_name).first().id
 
 
-def existCounty(county_name, state_id):
+def existCounty(county_name, state_id, state_name):
     county = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Municipio.nome==county_name).filter(Estado.id==state_id).first()
     if not county:
-        insertCounty(county_name, state_id)
+        population = getCountyPopulation(county_name, state_name)
+        insertCounty(county_name, state_id, population)
 
-def insertCounty(county_name, state_id):
-    county_to_be_created = Municipio(nome=county_name, estado_id=state_id)
+def getCountyPopulation(county_name, state_name):
+    state_uf = getStateUFId(state_name)
+    #filter rows which uf is equals state
+    state_counties = counties_csv[counties_csv['UF'].astype(int) == state_uf]
+    #get population from county 
+    populationCounty = list(state_counties[state_counties['nome'] == county_name]['populacao'])
+    
+    #if is an existent county for that state, returns the population, otherwise returns 0
+    if(populationCounty):
+        return int(populationCounty[0])
+    else:
+        return 0
+
+def insertCounty(county_name, state_id, population):
+    county_to_be_created = Municipio(nome=county_name,populacao=population,estado_id=state_id)
     db.session.add(county_to_be_created)
     db.session.commit()
 
