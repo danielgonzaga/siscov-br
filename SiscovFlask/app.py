@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import pip._vendor.requests as req
 from models import *
+from sqlalchemy import func
 
 # Routes
 # /region -> traz todas as regioes
@@ -95,7 +96,7 @@ def findStateByName(state_id):
 #all counties from state
 @app.route("/state/<state_id>/county")
 def findCounties(state_id):
-    result = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.nome == state_id).all()
+    result = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
 
     return result
 
@@ -106,15 +107,15 @@ def findCountyByName(state_id, county_id):
     
     return result
 
-#testando pegar dado externo da api do ibge
-#@app.route('/api/teste')
-def getStatesPopulation(state_id):
-    #Obtém a projecao da população para as localidades: Brasil (código BR ou 0), Grandes Regiões (códigos de 1 a 5) e Unidades da Federação (código numérico).
-    #1 - Norte, 2 - Nordeste, 3 - Sudeste, 4 - Sul, 5 - Centro-Oeste
-    #populacao do Norte do país
-    result = req.get('https://servicodados.ibge.gov.br/api/v1/projecoes/populacao/{}'.format(state_id))
-    data = result.json()
-    return data.get('projecao').get('populacao')
+
+def getStatesPopulation():
+    population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).first()
+    return population[0]
+
+def getSpecificStatePopulation(state_id):
+    population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter(Estado.id == state_id).first()
+
+    return population[0]
 
 def getRegionsStates(id):
     #TO DO: replicar pras demais regioes 
