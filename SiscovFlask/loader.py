@@ -108,7 +108,12 @@ def insertCase(case_id, notification_date, symptoms_date, age, conditions, case_
 if __name__ == '__main__':
     for key,value in urls.items():
         for k, v in value.items():
-            tp = pd.read_csv('./datasets/'+ k + '.csv', skiprows=1, names=col_names, encoding="UTF-8", sep='\t', engine='python', chunksize=10000, iterator=True)
+            url = './datasets/'+ k + '.csv'
+            csv_header = pd.read_csv(url, index_col=0, nrows=0, encoding="UTF-8", sep='\t', engine='python')
+            new_header = ['id']
+            for item in csv_header.items():
+                new_header.append(item[0])
+            tp = pd.read_csv(url, skiprows=1, names=new_header, encoding="UTF-8", sep='\t', engine='python', chunksize=10000, iterator=True)
             df = pd.concat(tp)
             print(df.dtypes)
             print("Inserting: ", key)
