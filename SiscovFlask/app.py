@@ -4,10 +4,10 @@ from models import *
 from sqlalchemy import func
 
 # Routes
-# /region -> traz todas as regioes
-# /region/<region_id>  -> traz uma regiao em especifico
-# /state -> traz todos os estados
-# /state/<state_id> -> traz um estado em especifico
+# (OK) /region -> traz todas as regioes
+# (OK) /region/<region_id>  -> traz uma regiao em especifico
+# (OK) /state -> traz todos os estados
+# (OK) /state/<state_id> -> traz um estado em especifico
 # /state/<state_id>/county -> traz todos os municipios de um estado em especifico
 # /state/<state_id>/county/<county_id> -> traz um municipio em especifico de um estado em especifico
 
@@ -33,7 +33,6 @@ def findAllRegions():
 
     return jsonify(norte_json, nordeste_json, sudeste_json, sul_json, centro_oeste_json)
 
-#get region by id
 @app.route('/region/<region_id>')
 def findRegionById(region_id):
     if request.method == 'GET':
@@ -65,7 +64,7 @@ def findAllStates():
             state_id = getStateId(state['nome'])
             population=0
             if state_id != 0:
-                population=getStatesPopulation(state_id)
+                population=getSpecificStatePopulation(state_id)
             state['population']=population
             
             state['color']=colorCalculation(population, total_cases)
@@ -75,15 +74,40 @@ def findAllStates():
 
 #specific state
 @app.route("/state/<state_id>")
-def findStateByName(state_id):
-    result = Estado.query.filter(Estado.nome == state_id).first()
-    return result
+def findStateById(state_id):
+    state_query = Estado.query.filter(Estado.id == state_id).first()
+    state = state_schema.dump(state_query)
+
+    state['isState']=True
+    state['isRegion']=False
+    state['isCounty']=False
+    state['isSelected']=False
+
+    # We need news table to set variant cases 
+    state['variantCases']=False
+
+    # Getting total cases per State
+    total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).count()
+    state['totalCases']=total_cases
+
+    # Getting total deaths per State
+    total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).filter(Casos.evolucaoCaso=='Óbito').count()
+    state['totalDeaths']=total_deaths
+
+    state_id = getStateId(state['nome'])
+    population=0
+    if state_id != 0:
+        population=getSpecificStatePopulation(state_id)
+    state['population']=population
+
+    state['color']=colorCalculation(population, total_cases)
+        
+    return jsonify(state)
 
 #all counties from state
 @app.route("/state/<state_id>/county")
 def findCounties(state_id):
     result = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
-
     return result
 
 #get specific county
@@ -187,9 +211,11 @@ def getStateId(state_name):
     return state_id
 
 def colorCalculation(population, total_cases):
-    calculation = total_cases/population
+    if population:
+        calculation = total_cases/population
+    else:
+        calculation = 0
     color = ''
-    print("calculation: ", calculation)
     if calculation >= 0 and calculation < 0.35:
         color = 'blue'
     elif calculation >= 0.35 and calculation < 75:
