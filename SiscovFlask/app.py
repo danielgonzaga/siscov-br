@@ -18,15 +18,19 @@ from models import *
 # Init schemas
 state_schema = EstadoSchema()
 states_schema = EstadoSchema(many=True)
+region_schema = RegionSchema()
+regions_schema = RegionSchema(many=True)
 
 @app.route('/region')
-def findNational():
-    all_states = Estado.query.all()
-    result = states_schema.dump(all_states)
+def findAllRegions():
+    if request.method == 'GET':
+        norte_json = getRegionData(1)
+        nordeste_json = getRegionData(2)
+        sudeste_json = getRegionData(3)
+        sul_json = getRegionData(4)
+        centro_oeste_json = getRegionData(5)
 
-    total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).count()
-
-    return jsonify(result)
+    return jsonify(norte_json, nordeste_json, sudeste_json, sul_json, centro_oeste_json)
 
 #get region by id
 @app.route('/region/<region_id>')
@@ -44,7 +48,7 @@ def findRegionById(region_id):
             state['variantCases']=False
 
             # Getting total cases per State
-            total_cases = getRegionsStates(region_id)
+            total_cases = getRegionData(region_id)
             state['totalCases']=total_cases
 
             # Getting total deaths per State
@@ -89,21 +93,18 @@ def findAllStates():
 @app.route("/state/<state_id>")
 def findStateByName(state_id):
     result = Estado.query.filter(Estado.nome == state_id).first()
-
     return result
 
 #all counties from state
 @app.route("/state/<state_id>/county")
 def findCounties(state_id):
     result = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.nome == state_id).all()
-
     return result
 
 #get specific county
 @app.route("/state/<state_id>/county/<county_id>")
 def findCountyByName(state_id, county_id):
     result = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.nome == state_id).filter(Municipio.nome == county_id).all()
-    
     return result
 
 #testando pegar dado externo da api do ibge
@@ -116,25 +117,50 @@ def getStatesPopulation(state_id):
     data = result.json()
     return data.get('projecao').get('populacao')
 
-def getRegionsStates(id):
-    #TO DO: replicar pras demais regioes 
+def getRegionData(id):
+    region_data = {}
     if id == 1:
-        #amazonas, roraima, amapa, para, tocantins, rondonia, acre
-        print('norte')
-        region_total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Amazonas") | (Estado.nome == "Roraima") | (Estado.nome == "Amapa") | (Estado.nome == "Tocantins") | (Estado.nome == "Acre")).count()
-        return region_total_cases
+        # Norte
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Acre") | (Estado.nome == "Amapa") | (Estado.nome == "Amazonas") | (Estado.nome == "Para") | (Estado.nome == "Rondonia") | (Estado.nome == "Roraima") | (Estado.nome == "Tocantins")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Acre") | (Estado.nome == "Amapa") | (Estado.nome == "Amazonas") | (Estado.nome == "Para") | (Estado.nome == "Rondonia") | (Estado.nome == "Roraima") | (Estado.nome == "Tocantins")).filter(Casos.evolucaoCaso=='Óbito').count()
+        region_data["nome"]="Norte"
+        region_data["totalCases"]=total_cases
+        region_data["totalDeaths"]=total_deaths
     elif id == 2:
-        #maranhao, piaui, ceara, rio grande do norte, pernambuco, paraiba, sergipe, alagoas, bahia
-        print('nordeste')
+        # Nordeste
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Alagoas") | (Estado.nome == "Bahia") | (Estado.nome == "Ceara") | (Estado.nome == "Maranhao") | (Estado.nome == "Paraiba") | (Estado.nome == "Piaui") | (Estado.nome == "Pernambuco") | (Estado.nome == "Rio Grande do Norte") | (Estado.nome == "Sergipe")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Alagoas") | (Estado.nome == "Bahia") | (Estado.nome == "Ceara") | (Estado.nome == "Maranhao") | (Estado.nome == "Paraiba") | (Estado.nome == "Piaui") | (Estado.nome == "Pernambuco") | (Estado.nome == "Rio Grande do Norte") | (Estado.nome == "Sergipe")).filter(Casos.evolucaoCaso=='Óbito').count()
+        region_data["nome"]="Nordeste"
+        region_data["totalCases"]=total_cases
+        region_data["totalDeaths"]=total_deaths
     elif id == 3:
-        #sao paulo, rio de janeiro, minas gerais, espirito santo
-        print("sudeste")
+        # Sudeste
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Espirito Santo") | (Estado.nome == "Minas Gerais") | (Estado.nome == "Rio de Janeiro") | (Estado.nome == "Sao Paulo")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Espirito Santo") | (Estado.nome == "Minas Gerais") | (Estado.nome == "Rio de Janeiro") | (Estado.nome == "Sao Paulo")).filter(Casos.evolucaoCaso=='Óbito').count()
+        region_data["nome"]="Sudeste"
+        region_data["totalCases"]=total_cases
+        region_data["totalDeaths"]=total_deaths
     elif id == 4:
-        #rio grande do sul, parana, santa catarina
-        print("sul")
+        # Sul
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Parana") | (Estado.nome == "Santa Catarina") | (Estado.nome == "Rio Grande do Sul")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Parana") | (Estado.nome == "Santa Catarina") | (Estado.nome == "Rio Grande do Sul")).filter(Casos.evolucaoCaso=='Óbito').count()
+        region_data["nome"]="Sul"
+        region_data["totalCases"]=total_cases
+        region_data["totalDeaths"]=total_deaths
     elif id == 5:
-        #goias, mato grosso, mato grosso do sul
-        print("centro-oeste")
+        # Centro-Oeste
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Goias") | (Estado.nome == "Mato Grosso") | (Estado.nome == "Mato Grosso do Sul") | (Estado.nome == "Distrito Federal")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Parana") | (Estado.nome == "Santa Catarina") | (Estado.nome == "Rio Grande do Sul")).filter(Casos.evolucaoCaso=='Óbito').count()
+        region_data["nome"]="Centro-Oeste"
+        region_data["totalCases"]=total_cases
+        region_data["totalDeaths"]=total_deaths
+    
+    region_data["isRegion"]=True
+    region_data["isState"]=False
+    region_data["isCounty"]=False
+    region_data['isSelected']=False
+    region_data['variantCases']=False
+    return region_data
 
 def getStateId(state_name):
     state_dict = {11: 'Rondonia', 12: 'Acre', 13: 'Amazonas', 14: 'Roraima', 15: 'Para', 16: 'Amapa', 17: 'Tocantins', 21: 'Maranhao', 22: 'Piaui', 23: 'Ceara', 24: 'Rio Grande do Norte', 25: 'Paraiba', 26: 'Pernambuco', 27: 'Alagoas', 28: 'Sergipe', 29: 'Bahia', 31: 'Minas Gerais', 32: 'Espirito Santo', 33: 'Rio de Janeiro', 35: 'Sao Paulo', 41: 'Parana', 42: 'Santa Catarina', 43: 'Rio Grande do Sul', 50: 'Mato Grosso do Sul', 51: 'Mato Grosso', 52: 'Goias', 53: 'Distrito Federal'}

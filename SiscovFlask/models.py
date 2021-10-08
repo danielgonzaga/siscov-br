@@ -52,3 +52,7 @@ class Casos(db.Model):
 class EstadoSchema(ma.Schema):
     class Meta:
         fields=('id', 'nome')
+
+class RegionSchema(ma.Schema):
+    class Meta:
+        fields=('id', 'nome')
