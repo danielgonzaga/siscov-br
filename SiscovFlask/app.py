@@ -21,6 +21,8 @@ state_schema = EstadoSchema()
 states_schema = EstadoSchema(many=True)
 region_schema = RegionSchema()
 regions_schema = RegionSchema(many=True)
+county_schema = CountySchema()
+counties_schema = CountySchema(many=True)
 
 @app.route('/region')
 def findAllRegions():
@@ -69,53 +71,87 @@ def findAllStates():
             
             state['color']=colorCalculation(population, total_cases)
             
-        jsonified_result = jsonify(result)
         return jsonify(result)
 
 #specific state
 @app.route("/state/<state_id>")
 def findStateById(state_id):
-    state_query = Estado.query.filter(Estado.id == state_id).first()
-    state = state_schema.dump(state_query)
+    if request.method == 'GET':
+        state_query = Estado.query.filter(Estado.id == state_id).first()
+        state = state_schema.dump(state_query)
 
-    state['isState']=True
-    state['isRegion']=False
-    state['isCounty']=False
-    state['isSelected']=False
+        state['isState']=True
+        state['isRegion']=False
+        state['isCounty']=False
+        state['isSelected']=False
 
-    # We need news table to set variant cases 
-    state['variantCases']=False
+        # We need news table to set variant cases 
+        state['variantCases']=False
 
-    # Getting total cases per State
-    total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).count()
-    state['totalCases']=total_cases
+        # Getting total cases per State
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).count()
+        state['totalCases']=total_cases
 
-    # Getting total deaths per State
-    total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).filter(Casos.evolucaoCaso=='Óbito').count()
-    state['totalDeaths']=total_deaths
+        # Getting total deaths per State
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).filter(Casos.evolucaoCaso=='Óbito').count()
+        state['totalDeaths']=total_deaths
 
-    state_id = getStateId(state['nome'])
-    population=0
-    if state_id != 0:
-        population=getSpecificStatePopulation(state_id)
-    state['population']=population
+        state_id = getStateId(state['nome'])
+        population=0
+        if state_id != 0:
+            population=getSpecificStatePopulation(state_id)
+        state['population']=population
 
-    state['color']=colorCalculation(population, total_cases)
+        state['color']=colorCalculation(population, total_cases)
         
-    return jsonify(state)
+        return jsonify(state)
 
-#all counties from state
 @app.route("/state/<state_id>/county")
-def findCounties(state_id):
-    result = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
-    return result
+def findAllCounties(state_id):
+    if request.method == 'GET':
+        all_counties = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
+        result = counties_schema.dump(all_counties)
+        for county in result:
+            county['isState']=False
+            county['isRegion']=False
+            county['isCounty']=True
+            county['isSelected']=False
+            county['variantCases']=False
 
-#get specific county
+            total_cases = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).count()
+            county['totalCases']=total_cases
+
+            total_deaths = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).filter(Casos.evolucaoCaso=='Óbito').count()
+            county['totalDeaths']=total_deaths
+
+            population = getSpecificCountyPopulation(county['id'])
+            county['population']=population
+            
+            county['color']=colorCalculation(population, total_cases)
+        return jsonify(result)
+
 @app.route("/state/<state_id>/county/<county_id>")
-def findCountyByName(state_id, county_id):
-    result = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.nome == state_id).filter(Municipio.nome == county_id).all()
-    return result
+def findCountyById(state_id, county_id):
+    if request.method == 'GET':
+        county_query = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).first()
+        county = county_schema.dump(county_query)
+        county['isState']=False
+        county['isRegion']=False
+        county['isCounty']=True
+        county['isSelected']=False
+        county['variantCases']=False
 
+        total_cases = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).count()
+        county['totalCases']=total_cases
+
+        total_deaths = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).filter(Casos.evolucaoCaso=='Óbito').count()
+        county['totalDeaths']=total_deaths
+
+        population = getSpecificCountyPopulation(county['id'])
+        county['population']=population
+        
+        county['color']=colorCalculation(population, total_cases)
+        return jsonify(county)
 
 def getStatesPopulation():
     population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).first()
@@ -124,6 +160,10 @@ def getStatesPopulation():
 def getSpecificStatePopulation(state_id):
     population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter(Estado.id == state_id).first()
     return population[0]
+
+def getSpecificCountyPopulation(county_id):
+    population = Municipio.query.with_entities(Municipio.populacao).filter(Municipio.id == county_id)
+    return population[0][0]
 
 def getSpecificRegionPopulation(region_id):
     if region_id == 1:

@@ -56,3 +56,7 @@ class EstadoSchema(ma.Schema):
 class RegionSchema(ma.Schema):
     class Meta:
         fields=('id', 'nome')
+
+class CountySchema(ma.Schema):
+    class Meta:
+        fields=('id', 'nome')
