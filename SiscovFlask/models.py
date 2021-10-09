@@ -14,7 +14,8 @@ class Estado(db.Model):
     nome = db.Column(db.String(200), nullable=False)
     municipios = db.relationship('Municipio', backref='estado')
 
-    def __init__(self, nome):
+    def __init__(self, id, nome):
+        self.id = id
         self.nome = nome
 
 class Municipio(db.Model):
