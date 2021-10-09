@@ -3,7 +3,7 @@
         <p-accordionTab
         *ngFor="let item of items"
         [id]="item.id" 
-        [header]="item.name" 
+        [header]="item.nome" 
         [selected]="item.isSelected"
         (click)="verifyAccordionSelection(item)"
         #target

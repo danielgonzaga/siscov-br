@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ILocalsItem } from 'src/app/shared/locals-list/locals-list.component';
 import * as _ from 'lodash';
+import { MapService } from '../services/map.service';
 
 @Component({
   selector: 'app-brazil-regions',
@@ -10,17 +11,23 @@ import * as _ from 'lodash';
 })
 export class BrazilRegionsComponent implements OnInit {
 
-  regions: ILocalsItem[] = [
-    {name: 'Norte', id: 'norte', isRegion: true, isState: false, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-    {name: 'Nordeste', id: 'nordeste', isRegion: true, isState: false, isCounty: false, isSelected: false, variantCases: false, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-    {name: 'Centro-Oeste', id: 'centro_oeste', isRegion: true, isState: false, isCounty: false, isSelected: false, variantCases: false, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-    {name: 'Sudeste', id: 'sudeste', isRegion: true, isState: false, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-    {name: 'Sul', id: 'sul', isRegion: true, isState: false, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  ]
+  regions = [];
 
-  constructor() { }
+  constructor(private mapService: MapService) { }
 
   ngOnInit(): void {
+    this.mapService.listAllRegions().subscribe(region => {
+      // this.regions.length = 0;
+      this.regions = region
+      this.colorizeLocals();
+    })
+    
+  }
+
+  colorizeLocals() {
+    this.regions.forEach(region => {
+      (document.querySelector('#' + region.nome) as HTMLElement).style.fill = region.color;
+    })
   }
 
   getLocal(event) {

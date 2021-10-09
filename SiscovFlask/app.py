@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS, cross_origin
 import pip._vendor.requests as req
 from models import *
 from sqlalchemy import func
@@ -25,6 +26,7 @@ county_schema = CountySchema()
 counties_schema = CountySchema(many=True)
 
 @app.route('/region')
+@cross_origin()
 def findAllRegions():
     if request.method == 'GET':
         norte_json = getRegionData(1)
@@ -36,12 +38,14 @@ def findAllRegions():
     return jsonify(norte_json, nordeste_json, sudeste_json, sul_json, centro_oeste_json)
 
 @app.route('/region/<region_id>')
+@cross_origin()
 def findRegionById(region_id):
     if request.method == 'GET':
         region_json = getRegionData(region_id)
     return jsonify(region_json)
 
 @app.route("/state")
+@cross_origin()
 def findAllStates():
     if request.method == 'GET':
         all_states = Estado.query.all()
@@ -51,6 +55,8 @@ def findAllStates():
             state['isRegion']=False
             state['isCounty']=False
             state['isSelected']=False
+            state['id'] = state['id']
+
 
             # We need news table to set variant cases 
             state['variantCases']=False
@@ -75,6 +81,7 @@ def findAllStates():
 
 #specific state
 @app.route("/state/<state_id>")
+@cross_origin()
 def findStateById(state_id):
     if request.method == 'GET':
         state_query = Estado.query.filter(Estado.id == state_id).first()
@@ -84,6 +91,7 @@ def findStateById(state_id):
         state['isRegion']=False
         state['isCounty']=False
         state['isSelected']=False
+        state['id'] = state['id']
 
         # We need news table to set variant cases 
         state['variantCases']=False
@@ -107,6 +115,7 @@ def findStateById(state_id):
         return jsonify(state)
 
 @app.route("/state/<state_id>/county")
+@cross_origin()
 def findAllCounties(state_id):
     if request.method == 'GET':
         all_counties = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
@@ -131,6 +140,7 @@ def findAllCounties(state_id):
         return jsonify(result)
 
 @app.route("/state/<state_id>/county/<county_id>")
+@cross_origin()
 def findCountyById(state_id, county_id):
     if request.method == 'GET':
         county_query = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).first()
@@ -257,11 +267,14 @@ def colorCalculation(population, total_cases):
         calculation = 0
     color = ''
     if calculation >= 0 and calculation < 0.35:
-        color = 'blue'
+        # Blue
+        color = '#0377fc'
     elif calculation >= 0.35 and calculation < 75:
-        color = 'yellow'
+        # Yellow
+        color = '#dce650'
     elif calculation >= 75:
-        color = 'red'
+        # Red
+        color = '#cf4040'
     return color
 
 if __name__ == '__main__':

@@ -12,6 +12,7 @@ export interface ILocalsItem {
   population: number,
   totalCases: number,
   totalDeaths: number,
+  color: string,
 }
 
 @Component({
@@ -27,6 +28,10 @@ export class LocalsListComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges() {
+    console.log("this.items: ", this.items);
   }
 
   goStatesMap() {
