@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { ILocalsItem } from 'src/app/shared/locals-list/locals-list.component';
 import * as _ from 'lodash';
+import { MapService } from '../services/map.service';
 
 @Component({
   selector: 'app-brazil-states',
@@ -11,40 +12,25 @@ import * as _ from 'lodash';
 })
 export class BrazilStatesComponent implements OnInit {
 
-  states: ILocalsItem[] = [];
-  // states: ILocalsItem[] = [
-  //   {name: 'Acre', id: 'acre', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Alagoas', id: 'alagoas', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Amapá', id: 'amapa', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Amazonas', id: 'amazonas', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Bahia', id: 'bahia', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Ceará', id: 'ceara', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Distrito Federal', id: 'distrito_federal', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Espírito Santo', id: 'espirito_santo', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Goiás', id: 'goias', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Maranhão', id: 'maranhao', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Mato Grosso', id: 'mato_grosso', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Mato Grosso do Sul', id: 'mato_grosso_do_sul', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Minas Gerais', id: 'minas_gerais', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Pará', id: 'para', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Paraíba', id: 'paraiba', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Paraná', id: 'parana', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Pernambuco', id: 'pernambuco', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Piauí', id: 'piaui', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Rio de Janeiro', id: 'rio_de_janeiro', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Rio Grande do Norte', id: 'rio_grande_do_norte', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Rio Grande do Sul', id: 'rio_grande_do_sul', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Rondônia', id: 'rondonia', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Roraima', id: 'roraima', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Santa Catarina', id: 'santa_catarina', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'São Paulo', id: 'sao_paulo', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Sergipe', id: 'sergipe', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  //   {name: 'Tocantins', id: 'tocantins', isRegion: false, isState: true, isCounty: false, isSelected: false, variantCases: true, population: 50000000, totalCases: 1000000, totalDeaths: 200000},
-  // ]
+  states  = [];
+  loading: boolean = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private mapService: MapService) { }
 
   ngOnInit(): void {
+    this.loading = true;
+    this.mapService.listAllStates().subscribe(state => {
+      this.loading = false;
+      this.states = state
+      this.colorizeLocals();
+    })
+    
+  }
+
+  colorizeLocals() {
+    this.states.forEach(state => {
+      (document.querySelector('#' + state.nome) as HTMLElement).style.fill = state.color;
+    })
   }
 
   goRegionsMap() {
@@ -55,7 +41,7 @@ export class BrazilStatesComponent implements OnInit {
     let stateToBeUnselected = _.find(this.states, {isSelected: true});
     if(stateToBeUnselected) stateToBeUnselected.isSelected = false;
     let selectedStateId = event.target.attributes.id.nodeValue;
-    let selectedState = _.find(this.states, {id: selectedStateId});
+    let selectedState = _.find(this.states, {nome: selectedStateId});
     selectedState.isSelected = true;
   }
 
@@ -63,7 +49,7 @@ export class BrazilStatesComponent implements OnInit {
     let stateToBeUnselected = _.find(this.states, {isSelected: true});
     if(stateToBeUnselected) stateToBeUnselected.isSelected = false;
     let selectedStateId = id;
-    let selectedState = _.find(this.states, {id: selectedStateId});
+    let selectedState = _.find(this.states, {nome: selectedStateId});
     selectedState.isSelected = !selectedState.isSelected;
   }
 

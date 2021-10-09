@@ -12,13 +12,15 @@ import { MapService } from '../services/map.service';
 export class BrazilRegionsComponent implements OnInit {
 
   regions = [];
+  loading: boolean = false;
 
   constructor(private mapService: MapService) { }
 
   ngOnInit(): void {
+    this.loading = true;
     this.mapService.listAllRegions().subscribe(region => {
-      // this.regions.length = 0;
       this.regions = region
+      this.loading = false;
       this.colorizeLocals();
     })
     
@@ -34,7 +36,7 @@ export class BrazilRegionsComponent implements OnInit {
     let regionToBeUnselected = _.find(this.regions, {isSelected: true});
     if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
     let selectedRegionId = event.target.attributes.id.nodeValue;
-    let selectedRegion = _.find(this.regions, {id: selectedRegionId});
+    let selectedRegion = _.find(this.regions, {nome: selectedRegionId});
     selectedRegion.isSelected = true;
   }
 
@@ -42,7 +44,7 @@ export class BrazilRegionsComponent implements OnInit {
     let regionToBeUnselected = _.find(this.regions, {isSelected: true});
     if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
     let selectedRegionId = id;
-    let selectedRegion = _.find(this.regions, {id: selectedRegionId});
+    let selectedRegion = _.find(this.regions, {nome: selectedRegionId});
     selectedRegion.isSelected = !selectedRegion.isSelected;
   }
 }

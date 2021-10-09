@@ -114,6 +114,18 @@ def findStateById(state_id):
         
         return jsonify(state)
 
+@app.route("/state/<state_name>/id")
+@cross_origin()
+def findStateByName(state_name):
+    if request.method == 'GET':
+        state_query = Estado.query.filter(Estado.nome == state_name).first()
+        state = state_schema.dump(state_query)
+
+        state['id'] = state['id']
+        state['nome'] = state['nome']
+        
+        return jsonify(state)
+
 @app.route("/state/<state_id>/county")
 @cross_origin()
 def findAllCounties(state_id):

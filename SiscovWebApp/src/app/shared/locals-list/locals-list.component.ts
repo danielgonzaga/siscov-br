@@ -22,7 +22,7 @@ export interface ILocalsItem {
 })
 export class LocalsListComponent implements OnInit {
 
-  @Input() items: ILocalsItem;
+  @Input() items: ILocalsItem[] = [];
   @Output() onAccordionClick = new EventEmitter<string>();
 
   constructor(private router: Router) { }
@@ -38,7 +38,11 @@ export class LocalsListComponent implements OnInit {
     this.router.navigateByUrl('/states');
   }
 
+  goCountiesMap(stateName) {
+    this.router.navigateByUrl('/states/' + stateName.toLowerCase());
+  }
+
   verifyAccordionSelection(item) {
-    this.onAccordionClick.emit(item.id);
+    this.onAccordionClick.emit(item.nome);
   }
 }

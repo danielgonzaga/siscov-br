@@ -2,25 +2,25 @@
     <p-accordion>
         <p-accordionTab
         *ngFor="let item of items"
-        [id]="item.id" 
+        [id]="item.nome" 
         [header]="item.nome" 
         [selected]="item.isSelected"
         (click)="verifyAccordionSelection(item)"
         #target
         >
            <h4>População total</h4>
-           <h3>{{ item.population }}</h3>
+           <h3>{{ item.population | number:'1.0':'en-US' }}</h3>
            <h4>Casos totais</h4>
-           <h3>{{ item.totalCases }}</h3>
+           <h3>{{ item.totalCases | number:'1.0':'en-US' }}</h3>
            <h4>Número de mortes</h4>
-           <h3>{{ item.totalDeaths }}</h3>
+           <h3>{{ item.totalDeaths | number:'1.0':'en-US' }}</h3>
            <div class="variant-button" *ngIf="item.variantCases">
                Local muito afetado por <b><u>variantes da COVID-19</u></b>
            </div>
            <div class="inner-map-button" (click)="goStatesMap()" *ngIf="item.isRegion">
                 <div>Ver mapa de Estados</div>
            </div>
-           <div class="inner-map-button" *ngIf="item.isState">
+           <div class="inner-map-button" (click)="goCountiesMap(item.nome)" *ngIf="item.isState">
                 <div>Ver mapa de Municípios</div>
            </div>
         </p-accordionTab>

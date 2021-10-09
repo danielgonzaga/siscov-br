@@ -14,4 +14,16 @@ export class MapService {
   listAllRegions() {
     return this.http.get<any>(this.API + 'region');
   }
+
+  listAllStates() {
+    return this.http.get<any>(this.API + 'state');
+  }
+
+  listAllCounties(stateId) {
+    return this.http.get<any>(this.API + 'state/' + stateId + '/county');
+  }
+
+  findStateByName(stateName) {
+    return this.http.get<any>(this.API + 'state/' + stateName + '/id');
+  }
 }
