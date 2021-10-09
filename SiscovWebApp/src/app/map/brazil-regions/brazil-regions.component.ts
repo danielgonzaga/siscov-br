@@ -28,23 +28,38 @@ export class BrazilRegionsComponent implements OnInit {
 
   colorizeLocals() {
     this.regions.forEach(region => {
-      (document.querySelector('#' + region.nome) as HTMLElement).style.fill = region.color;
+      const normalizedRegionName = region.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
+      try {  
+        (document.querySelector('#' + normalizedRegionName) as HTMLElement).style.fill = region.color;
+      } catch {
+        console.error("Local id not found.");
+      }
     })
   }
 
   getLocal(event) {
     let regionToBeUnselected = _.find(this.regions, {isSelected: true});
-    if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
     let selectedRegionId = event.target.attributes.id.nodeValue;
-    let selectedRegion = _.find(this.regions, {nome: selectedRegionId});
-    selectedRegion.isSelected = true;
+    let selectedRegion = _.find(this.regions, {id: selectedRegionId});
+    if(regionToBeUnselected === selectedRegion) {
+      selectedRegion.isSelected = !selectedRegion.isSelected
+    } else {
+      if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
+      selectedRegion.isSelected = true;
+    }
   }
 
   onAccordionClick(id) {
     let regionToBeUnselected = _.find(this.regions, {isSelected: true});
-    if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
-    let selectedRegionId = id;
-    let selectedRegion = _.find(this.regions, {nome: selectedRegionId});
-    selectedRegion.isSelected = !selectedRegion.isSelected;
+    const normalizedId = id.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
+    let selectedRegion = _.find(this.regions, {id: normalizedId});
+    if(regionToBeUnselected === selectedRegion) {
+      selectedRegion.isSelected = !selectedRegion.isSelected
+    } else {
+      if(regionToBeUnselected !== undefined) {
+        regionToBeUnselected.isSelected = false;
+      } 
+      selectedRegion.isSelected = true;
+    }
   }
 }

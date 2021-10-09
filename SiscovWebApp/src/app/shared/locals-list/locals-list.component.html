@@ -2,7 +2,7 @@
     <p-accordion>
         <p-accordionTab
         *ngFor="let item of items"
-        [id]="item.nome" 
+        [id]="item.id" 
         [header]="item.nome" 
         [selected]="item.isSelected"
         (click)="verifyAccordionSelection(item)"
@@ -20,7 +20,7 @@
            <div class="inner-map-button" (click)="goStatesMap()" *ngIf="item.isRegion">
                 <div>Ver mapa de Estados</div>
            </div>
-           <div class="inner-map-button" (click)="goCountiesMap(item.nome)" *ngIf="item.isState">
+           <div class="inner-map-button" (click)="goCountiesMap(item.id)" *ngIf="item.isState">
                 <div>Ver mapa de Municípios</div>
            </div>
         </p-accordionTab>

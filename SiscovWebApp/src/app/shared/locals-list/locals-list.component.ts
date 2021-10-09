@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 export interface ILocalsItem {
-  name: string,
+  nome: string,
   id: string,
   isRegion: boolean,
   isState: boolean,
@@ -31,15 +31,18 @@ export class LocalsListComponent implements OnInit {
   }
 
   ngOnChanges() {
-    console.log("this.items: ", this.items);
+    this.items.map(item => {
+      item.id = item.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_")
+    })
   }
 
   goStatesMap() {
     this.router.navigateByUrl('/states');
   }
 
-  goCountiesMap(stateName) {
-    this.router.navigateByUrl('/states/' + stateName.toLowerCase());
+  goCountiesMap(stateId) {
+    console.log("stateId: ", stateId);
+    this.router.navigateByUrl('/states/' + stateId.toLowerCase());
   }
 
   verifyAccordionSelection(item) {

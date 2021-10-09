@@ -32,24 +32,38 @@ export class AcreComponent implements OnInit {
   colorizeLocals() {
     this.counties.forEach(county => {
       const normalizedCountyName = county.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
-      (document.querySelector('#' + normalizedCountyName) as HTMLElement).style.fill = county.color;
+      try {
+        (document.querySelector('#' + normalizedCountyName) as HTMLElement).style.fill = county.color;
+      } catch {
+        console.error("Local id not found.");
+      }
     })
   }
 
   getLocal(event) {
-    let regionToBeUnselected = _.find(this.counties, {isSelected: true});
-    if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
-    let selectedRegionId = event.target.attributes.id.nodeValue;
-    let selectedRegion = _.find(this.counties, {nome: selectedRegionId});
-    selectedRegion.isSelected = true;
+    let countyToBeUnselected = _.find(this.counties, {isSelected: true});
+    let selectedCountyId = event.target.attributes.id.nodeValue;
+    let selectedCounty = _.find(this.counties, {id: selectedCountyId});
+    if(countyToBeUnselected === selectedCounty) {
+      selectedCounty.isSelected = !selectedCounty.isSelected
+    } else {
+      if(countyToBeUnselected) countyToBeUnselected.isSelected = false;
+      selectedCounty.isSelected = true;
+    }
   }
 
   onAccordionClick(id) {
-    let regionToBeUnselected = _.find(this.counties, {isSelected: true});
-    if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
-    let selectedRegionId = id;
-    let selectedRegion = _.find(this.counties, {nome: selectedRegionId});
-    selectedRegion.isSelected = !selectedRegion.isSelected;
+    let countyToBeUnselected = _.find(this.counties, {isSelected: true});
+    const normalizedId = id.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
+    let selectedCounty = _.find(this.counties, {id: normalizedId});
+    if(countyToBeUnselected === selectedCounty) {
+      selectedCounty.isSelected = !selectedCounty.isSelected
+    } else {
+      if(countyToBeUnselected !== undefined) {
+        countyToBeUnselected.isSelected = false;
+      } 
+      selectedCounty.isSelected = true;
+    }
   }
 
 }
