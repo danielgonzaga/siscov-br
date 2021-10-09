@@ -2,7 +2,7 @@ import pandas as pd
 from csvUrls import urls
 import numpy as np
 from models import Estado, Municipio, Casos, db
-from utils import getStateUFId
+from utils import getStateUFId, getStateNameUsingUF
 
 col_names = ['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'idade', 'evolucaoCaso', 'classificacaoFinal']
 
@@ -11,8 +11,8 @@ counties_csv = pd.read_csv('./utils/PopulacaoMunicipios.csv', skiprows=1, encodi
 
 def insertIntoTable(dataset, state_name):
     # States
-    existState(state_name)
-    
+    #insertAllStatesAndCounties()
+    print("Inserting {} cases...".format(state_name))
     for row in dataset.index:
         # Declare variables
         age = dataset['idade'][row]
@@ -32,34 +32,42 @@ def insertIntoTable(dataset, state_name):
         if county_name != county_name:
             county_name = "Desconhecido"
 
-        print("row:", row)
-        
-        # County
-        state_id = getStateId(state_name)
-        existCounty(county_name, state_id, state_name)
+        if(row % 10000 == 0):
+            print("row:", row)
+        #print("row:", row)
 
         # Casos
         county_id = getCountyId(county_name)
         exist_case = existCase(case_id)
 
-        # Insert only if not exists and county_id is valid
-        if exist_case == False and county_id != -1:
+        # Insert only if not exists, county_id is valid and is a confirmed case
+        if exist_case == False and county_id != -1 and final_classification=='Confirmado Laboratorial':
             insertCase(case_id, notification_date, symptoms_date, age, conditions, case_evolution, final_classification, county_id)
         
-def existState(state_name):
-    state = Estado.query.filter_by(nome=state_name).first()
-    print("state query:", state)
+def existState(state_name, state_uf):
+    state = Estado.query.filter_by(id=state_uf).first()    
     if not state:
-        insertState(state_name)
+        insertState(state_name, state_uf)
 
-def insertState(state_name):
-    state_to_be_created = Estado(nome=state_name)
+def insertState(state_name, state_uf):
+    state_to_be_created = Estado(id = state_uf, nome=state_name)
     db.session.add(state_to_be_created)
     db.session.commit()
 
+def insertAllStatesAndCounties():
+    for row in counties_csv.index:
+        county = counties_csv['nome'][row]
+        print(county)
+        state_uf = counties_csv['UF'][row].tolist()
+        print(state_uf)
+        state_name = getStateNameUsingUF(state_uf)
+        print(state_name)
+
+        existState(state_name, state_uf)
+        existCounty(county, state_uf, state_name)
+
 def getStateId(state_name):
     return Estado.query.filter_by(nome=state_name).first().id
-
 
 def existCounty(county_name, state_id, state_name):
     county = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Municipio.nome==county_name).filter(Estado.id==state_id).first()
@@ -115,7 +123,7 @@ if __name__ == '__main__':
                 new_header.append(item[0])
             tp = pd.read_csv(url, skiprows=1, names=new_header, encoding="UTF-8", sep='\t', engine='python', chunksize=10000, iterator=True)
             df = pd.concat(tp)
-            print(df.dtypes)
+            #print(df.dtypes)
             print("Inserting: ", key)
             insertIntoTable(df, key)
         print(key, "cases sucessfully updated!")
