@@ -24,14 +24,13 @@ export class BrazilStatesComponent implements OnInit {
       this.states = state
       this.colorizeLocals();
     })
-    
   }
 
   colorizeLocals() {
     this.states.forEach(state => {
-      const normalizedStateName = state.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
+      // const normalizedStateName = state.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
       try {
-        (document.querySelector('#' + normalizedStateName) as HTMLElement).style.fill = state.color;
+        (document.querySelector('#est_' + state.id) as HTMLElement).style.fill = state.color;
       } catch {
         console.error("Local id not found.");
       }
@@ -45,7 +44,8 @@ export class BrazilStatesComponent implements OnInit {
   getLocal(event) {
     let stateToBeUnselected = _.find(this.states, {isSelected: true});
     let selectedStateId = event.target.attributes.id.nodeValue;
-    let selectedState = _.find(this.states, {id: selectedStateId});
+    let parsedStateId = +selectedStateId.split('_')[1];
+    let selectedState = _.find(this.states, {id: parsedStateId});
     if(stateToBeUnselected === selectedState) {
       selectedState.isSelected = !selectedState.isSelected
     } else {
@@ -56,8 +56,7 @@ export class BrazilStatesComponent implements OnInit {
 
   onAccordionClick(id) {
     let stateToBeUnselected = _.find(this.states, {isSelected: true});
-    const normalizedId = id.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
-    let selectedState = _.find(this.states, {id: normalizedId});
+    let selectedState = _.find(this.states, {id: id});
     if(stateToBeUnselected === selectedState) {
       selectedState.isSelected = !selectedState.isSelected
     } else {

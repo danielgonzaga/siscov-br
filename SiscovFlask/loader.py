@@ -24,7 +24,7 @@ def insertAllStatesAndCounties():
     for row in counties_csv.index:
         county = counties_csv['nome'][row]
         print(county)
-        codIBGE = counties_csv['codigoIBGE'][row]
+        codIBGE = counties_csv['codigoIBGE'][row].tolist()
         state_uf = counties_csv['UF'][row].tolist()
         print(state_uf)
         state_name = getStateNameUsingUF(state_uf)

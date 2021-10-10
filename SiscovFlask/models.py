@@ -26,7 +26,8 @@ class Municipio(db.Model):
     estado_id = db.Column(db.Integer, db.ForeignKey('estado.id'))
     casos = db.relationship('Casos', backref='municipio')
 
-    def __init__(self, nome, populacao, estado_id):
+    def __init__(self, id, nome, populacao, estado_id):
+        self.id = id
         self.nome = nome
         self.populacao = populacao
         self.estado_id = estado_id

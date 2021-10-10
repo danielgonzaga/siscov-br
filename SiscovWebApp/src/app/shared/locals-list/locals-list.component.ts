@@ -31,21 +31,22 @@ export class LocalsListComponent implements OnInit {
   }
 
   ngOnChanges() {
-    this.items.map(item => {
-      item.id = item.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_")
-    })
+    // this.items.map(item => {
+    //   item.id = item.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_")
+    // })
   }
 
   goStatesMap() {
     this.router.navigateByUrl('/states');
   }
 
-  goCountiesMap(stateId) {
+  goCountiesMap(stateId, stateName) {
     console.log("stateId: ", stateId);
-    this.router.navigateByUrl('/states/' + stateId.toLowerCase());
+    // const stateNameNormalized = stateName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_")
+    this.router.navigateByUrl('/states/' + stateId);
   }
 
   verifyAccordionSelection(item) {
-    this.onAccordionClick.emit(item.nome);
+    this.onAccordionClick.emit(item.id);
   }
 }
