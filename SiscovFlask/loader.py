@@ -6,8 +6,8 @@ from utils import getStateUFId, getStateNameUsingUF
 
 col_names = ['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'idade', 'evolucaoCaso', 'classificacaoFinal']
 
-counties_names = ['UF', 'nome', 'populacao']
-counties_csv = pd.read_csv('./utils/PopulacaoMunicipios.csv', skiprows=1, encoding="UTF-8", names=counties_names, sep=';')
+counties_names = ['UF', 'nome', 'populacao', 'codigoIBGE']
+counties_csv = pd.read_csv('./utils/municipios_dados.csv', skiprows=1, encoding="UTF-8", names=counties_names, sep=';')
 
 def insertIntoTable(dataset, state_name):
     # States
@@ -58,23 +58,24 @@ def insertAllStatesAndCounties():
     for row in counties_csv.index:
         county = counties_csv['nome'][row]
         print(county)
+        codIBGE = counties_csv['codigoIBGE'][row]
         state_uf = counties_csv['UF'][row].tolist()
         print(state_uf)
         state_name = getStateNameUsingUF(state_uf)
         print(state_name)
 
         existState(state_name, state_uf)
-        existCounty(county, state_uf, state_name)
+        existCounty(county, state_uf, state_name, codIBGE)
 
 def getStateId(state_name):
     return Estado.query.filter_by(nome=state_name).first().id
 
-def existCounty(county_name, state_id, state_name):
+def existCounty(county_name, state_id, state_name, codIBGE):
     county = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Municipio.nome==county_name).filter(Estado.id==state_id).first()
     if not county:
         population = getCountyPopulation(county_name, state_name)
         if population != 0:
-            insertCounty(county_name, state_id, population)
+            insertCounty(county_name, state_id, population, codIBGE)
 
 def getCountyPopulation(county_name, state_name):
     state_uf = getStateUFId(state_name)
@@ -89,8 +90,9 @@ def getCountyPopulation(county_name, state_name):
     else:
         return 0
 
-def insertCounty(county_name, state_id, population):
-    county_to_be_created = Municipio(nome=county_name,populacao=population,estado_id=state_id)
+def insertCounty(county_name, state_id, population, codIBGE):
+    codIBGE = "mun_"+str(codIBGE)
+    county_to_be_created = Municipio(nome=county_name,populacao=population, codIBGE=codIBGE, estado_id=state_id)
     db.session.add(county_to_be_created)
     db.session.commit()
 
@@ -114,6 +116,7 @@ def insertCase(case_id, notification_date, symptoms_date, age, conditions, case_
     db.session.commit()
 
 if __name__ == '__main__':
+    insertAllStatesAndCounties()
     for key,value in urls.items():
         for k, v in value.items():
             url = './datasets/'+ k + '.csv'
