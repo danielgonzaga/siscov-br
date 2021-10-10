@@ -64,4 +64,4 @@ class RegionSchema(ma.Schema):
 
 class CountySchema(ma.Schema):
     class Meta:
-        fields=('id', 'nome')
+        fields=('id', 'nome', 'codIBGE')

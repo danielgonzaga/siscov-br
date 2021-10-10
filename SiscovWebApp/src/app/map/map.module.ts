@@ -33,7 +33,6 @@ import { SantaCatarinaComponent } from './brazil-counties/components/santa-catar
 import { SaoPauloComponent } from './brazil-counties/components/sao-paulo/sao-paulo.component';
 import { SergipeComponent } from './brazil-counties/components/sergipe/sergipe.component';
 import { TocantinsComponent } from './brazil-counties/components/tocantins/tocantins.component';
-import { DistritoFederalComponent } from './brazil-counties/components/distrito-federal/distrito-federal.component';
 
 
 @NgModule({
@@ -67,7 +66,6 @@ import { DistritoFederalComponent } from './brazil-counties/components/distrito-
     SaoPauloComponent,
     SergipeComponent,
     TocantinsComponent,
-    DistritoFederalComponent,
   ],
   imports: [
     CommonModule,
