@@ -19,7 +19,7 @@ const routes: Routes = [
     component: BrazilStatesComponent,
   },
   {
-    path: 'states/:name',
+    path: 'states/:id',
     component: BrazilCountiesComponent,
   }
 ];

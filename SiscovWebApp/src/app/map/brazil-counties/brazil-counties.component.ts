@@ -8,9 +8,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class BrazilCountiesComponent implements OnInit {
 
-  stateName = this.route.snapshot.params.name;
+  stateId = +this.route.snapshot.params.id;
 
-  constructor(private route: ActivatedRoute,) { }
+  constructor(private route: ActivatedRoute) {
+  }
 
   ngOnInit(): void {
   }

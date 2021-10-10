@@ -28,19 +28,19 @@ export class BrazilRegionsComponent implements OnInit {
 
   colorizeLocals() {
     this.regions.forEach(region => {
-      const normalizedRegionName = region.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
       try {  
-        (document.querySelector('#' + normalizedRegionName) as HTMLElement).style.fill = region.color;
+        (document.querySelector('#' + region.nome) as HTMLElement).style.fill = region.color;
       } catch {
         console.error("Local id not found.");
       }
+      region['id']=region['nome'];
     })
   }
 
   getLocal(event) {
     let regionToBeUnselected = _.find(this.regions, {isSelected: true});
     let selectedRegionId = event.target.attributes.id.nodeValue;
-    let selectedRegion = _.find(this.regions, {id: selectedRegionId});
+    let selectedRegion = _.find(this.regions, {nome: selectedRegionId});
     if(regionToBeUnselected === selectedRegion) {
       selectedRegion.isSelected = !selectedRegion.isSelected
     } else {
@@ -51,8 +51,7 @@ export class BrazilRegionsComponent implements OnInit {
 
   onAccordionClick(id) {
     let regionToBeUnselected = _.find(this.regions, {isSelected: true});
-    const normalizedId = id.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
-    let selectedRegion = _.find(this.regions, {id: normalizedId});
+    let selectedRegion = _.find(this.regions, {id: id});
     if(regionToBeUnselected === selectedRegion) {
       selectedRegion.isSelected = !selectedRegion.isSelected
     } else {
