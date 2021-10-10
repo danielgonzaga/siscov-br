@@ -4,8 +4,9 @@ from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 # dialect+driver://username:password@host:port/database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:5432/casos_covid'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:5432/TESTE_COVID'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:5432/casos_covid'
+database_name = "siscov"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:5432/' + database_name
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -37,7 +38,7 @@ class Casos(db.Model):
     id = db.Column(db.String(50), primary_key=True)
     dataNotificacao = db.Column(db.String(50), nullable=False)
     dataInicioSintomas = db.Column(db.String(50))
-    idade = db.Column(db.Integer)
+    idade = db.Column(db.String(5))
     condicoes = db.Column(db.String(500))
     evolucaoCaso = db.Column(db.String(500))
     classificacaoFinal = db.Column(db.String(500))
