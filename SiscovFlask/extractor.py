@@ -9,8 +9,10 @@ def download_csv(url):
     new_header = ['id']
     for item in csv_header.items():
         new_header.append(item[0])
-    tp = pd.read_csv(url, skiprows=1, names=new_header, usecols=['id', 'dataNotificacao', 'dataInicioSintomas', 'estado', 'municipio', 'idade', 'condicoes', 'evolucaoCaso', 'classificacaoFinal'], encoding="ISO-8859-1", sep=';', engine='python', chunksize=10000, iterator=True)
+    tp = pd.read_csv(url, skiprows=1, names=new_header, usecols=['id', 'dataNotificacao', 'dataInicioSintomas', 'estado', 'municipio', 'evolucaoCaso', 'classificacaoFinal'], encoding="ISO-8859-1", sep=';', engine='python', chunksize=10000, iterator=True)
     df = pd.concat(tp)
+    #filtering for only confirmed cases
+    df = df[df['classificacaoFinal'] == "Confirmado Laboratorial"]
     return df
 
 

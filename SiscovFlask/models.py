@@ -35,18 +35,14 @@ class Casos(db.Model):
     id = db.Column(db.String(50), primary_key=True)
     dataNotificacao = db.Column(db.String(50), nullable=False)
     dataInicioSintomas = db.Column(db.String(50))
-    idade = db.Column(db.String(5))
-    condicoes = db.Column(db.String(500))
     evolucaoCaso = db.Column(db.String(500))
     classificacaoFinal = db.Column(db.String(500))
     municipio_id = db.Column(db.Integer, db.ForeignKey('municipio.id'))
 
-    def __init__(self, id, dataNotificacao, dataInicioSintomas, idade, condicoes, evolucaoCaso, classificacaoFinal, municipio_id):
+    def __init__(self, id, dataNotificacao, dataInicioSintomas, evolucaoCaso, classificacaoFinal, municipio_id):
         self.id = id
         self.dataNotificacao = dataNotificacao
         self.dataInicioSintomas = dataInicioSintomas
-        self.idade = idade
-        self.condicoes = condicoes
         self.evolucaoCaso = evolucaoCaso
         self.classificacaoFinal = classificacaoFinal
         self.municipio_id = municipio_id

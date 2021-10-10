@@ -121,18 +121,20 @@ if __name__ == '__main__':
         print("Inserting",key,"cases...")
 
         cursor.execute('''
-                    INSERT INTO casos(id, "dataNotificacao", "dataInicioSintomas", idade, condicoes, "evolucaoCaso", 
+                    INSERT INTO casos(id, "dataNotificacao", "dataInicioSintomas", "evolucaoCaso", 
                             "classificacaoFinal", municipio_id)
                         SELECT tmp.id, tmp."dataNotificacao", tmp."dataInicioSintomas", tmp.idade, tmp.condicoes, tmp."evolucaoCaso",
-                        tmp."classificacaoFinal", municipio.id FROM tmp 
-                        JOIN  municipio on tmp.municipio = municipio.nome 
-                        JOIN estado on UPPER(estado.nome) = UPPER(tmp.estado)
-                        WHERE tmp."classificacaoFinal"='Confirmado Laboratorial' 
-                        AND UPPER(tmp.estado)='{}'
+                        tmp."classificacaoFinal", m.id FROM tmp 
+                        JOIN  (select municipio.nome, municipio.estado_id, municipio.id from municipio) as m 
+                        on tmp.municipio = m.nome 
+                        JOIN estado on estado.nome = UPPER(tmp.estado)
+                        WHERE UPPER(tmp.estado)='{}'
                         ON CONFLICT DO NOTHING;
                 '''.format(key))
 
         print(key, "cases sucessfully updated!")
     print("removing tmp table")
     cursor.execute('DROP TABLE tmp')
+    #closing psycopg connection to database
+    conn.close()
 
