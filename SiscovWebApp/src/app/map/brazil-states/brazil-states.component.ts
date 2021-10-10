@@ -29,7 +29,12 @@ export class BrazilStatesComponent implements OnInit {
 
   colorizeLocals() {
     this.states.forEach(state => {
-      (document.querySelector('#' + state.nome) as HTMLElement).style.fill = state.color;
+      const normalizedStateName = state.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
+      try {
+        (document.querySelector('#' + normalizedStateName) as HTMLElement).style.fill = state.color;
+      } catch {
+        console.error("Local id not found.");
+      }
     })
   }
 
@@ -39,18 +44,28 @@ export class BrazilStatesComponent implements OnInit {
 
   getLocal(event) {
     let stateToBeUnselected = _.find(this.states, {isSelected: true});
-    if(stateToBeUnselected) stateToBeUnselected.isSelected = false;
     let selectedStateId = event.target.attributes.id.nodeValue;
-    let selectedState = _.find(this.states, {nome: selectedStateId});
-    selectedState.isSelected = true;
+    let selectedState = _.find(this.states, {id: selectedStateId});
+    if(stateToBeUnselected === selectedState) {
+      selectedState.isSelected = !selectedState.isSelected
+    } else {
+      if(stateToBeUnselected) stateToBeUnselected.isSelected = false;
+      selectedState.isSelected = true;
+    }
   }
 
   onAccordionClick(id) {
     let stateToBeUnselected = _.find(this.states, {isSelected: true});
-    if(stateToBeUnselected) stateToBeUnselected.isSelected = false;
-    let selectedStateId = id;
-    let selectedState = _.find(this.states, {nome: selectedStateId});
-    selectedState.isSelected = !selectedState.isSelected;
+    const normalizedId = id.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
+    let selectedState = _.find(this.states, {id: normalizedId});
+    if(stateToBeUnselected === selectedState) {
+      selectedState.isSelected = !selectedState.isSelected
+    } else {
+      if(stateToBeUnselected !== undefined) {
+        stateToBeUnselected.isSelected = false;
+      } 
+      selectedState.isSelected = true;
+    }
   }
 
 }

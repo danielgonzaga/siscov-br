@@ -27,29 +27,43 @@ export class RioDeJaneiroComponent implements OnInit {
       })
 
     })
-    
   }
 
   colorizeLocals() {
     this.counties.forEach(county => {
-      (document.querySelector('#' + county.nome) as HTMLElement).style.fill = county.color;
+      const normalizedCountyName = county.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
+      try {
+        (document.querySelector('#' + normalizedCountyName) as HTMLElement).style.fill = county.color;
+      } catch {
+        console.error("Local id not found.");
+      }
     })
   }
 
   getLocal(event) {
     let regionToBeUnselected = _.find(this.counties, {isSelected: true});
-    if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
     let selectedRegionId = event.target.attributes.id.nodeValue;
-    let selectedRegion = _.find(this.counties, {nome: selectedRegionId});
-    selectedRegion.isSelected = true;
+    let selectedRegion = _.find(this.counties, {id: selectedRegionId});
+    if(regionToBeUnselected === selectedRegion) {
+      selectedRegion.isSelected = !selectedRegion.isSelected
+    } else {
+      if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
+      selectedRegion.isSelected = true;
+    }
   }
 
   onAccordionClick(id) {
     let regionToBeUnselected = _.find(this.counties, {isSelected: true});
-    if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
-    let selectedRegionId = id;
-    let selectedRegion = _.find(this.counties, {nome: selectedRegionId});
-    selectedRegion.isSelected = !selectedRegion.isSelected;
+    const normalizedId = id.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
+    let selectedRegion = _.find(this.counties, {id: normalizedId});
+    if(regionToBeUnselected === selectedRegion) {
+      selectedRegion.isSelected = !selectedRegion.isSelected
+    } else {
+      if(regionToBeUnselected !== undefined) {
+        regionToBeUnselected.isSelected = false;
+      } 
+      selectedRegion.isSelected = true;
+    }
   }
 
 }
