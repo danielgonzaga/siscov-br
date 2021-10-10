@@ -4,7 +4,6 @@ from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 # dialect+driver://username:password@host:port/database
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:5432/casos_covid'
 database_name = "siscov"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:siscov@localhost:5432/' + database_name
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -24,13 +23,11 @@ class Municipio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(200), nullable=False)
     populacao = db.Column(db.Integer)
-    codIBGE = db.Column(db.String(20), nullable=False)
     estado_id = db.Column(db.Integer, db.ForeignKey('estado.id'))
     casos = db.relationship('Casos', backref='municipio')
 
-    def __init__(self, nome, populacao, codIBGE, estado_id):
+    def __init__(self, nome, populacao, estado_id):
         self.nome = nome
-        self.codIBGE = codIBGE
         self.populacao = populacao
         self.estado_id = estado_id
 
@@ -64,4 +61,4 @@ class RegionSchema(ma.Schema):
 
 class CountySchema(ma.Schema):
     class Meta:
-        fields=('id', 'nome', 'codIBGE')
+        fields=('id', 'nome')

@@ -2,7 +2,7 @@ from models import Estado, Municipio, Casos
 from sqlalchemy import func
 
 def getStateUFId(state_name):
-    state_dict = {11: 'Rondonia', 12: 'Acre', 13: 'Amazonas', 14: 'Roraima', 15: 'Para', 16: 'Amapa', 17: 'Tocantins', 21: 'Maranhao', 22: 'Piaui', 23: 'Ceara', 24: 'Rio Grande do Norte', 25: 'Paraiba', 26: 'Pernambuco', 27: 'Alagoas', 28: 'Sergipe', 29: 'Bahia', 31: 'Minas Gerais', 32: 'Espirito Santo', 33: 'Rio de Janeiro', 35: 'Sao Paulo', 41: 'Parana', 42: 'Santa Catarina', 43: 'Rio Grande do Sul', 50: 'Mato Grosso do Sul', 51: 'Mato Grosso', 52: 'Goias', 53: 'Distrito Federal'}
+    state_dict = {11: 'RONDÔNIA', 12: 'ACRE', 13: 'AMAZONAS', 14: 'RORAIMA', 15: 'PARÁ', 16: 'AMAPÁ', 17: 'TOCANTINS', 21: 'MARANHÃO', 22: 'PIAUÍ', 23: 'CEARÁ', 24: 'RIO GRANDE DO NORTE', 25: 'PARAÍBA', 26: 'PERNAMBUCO', 27: 'ALAGOAS', 28: 'SERGIPE', 29: 'BAHIA', 31: 'MINAS GERAIS', 32: 'ESPÍRITO SANTO', 33: 'RIO DE JANEIRO', 35: 'SÃO PAULO', 41: 'PARANÁ', 42: 'SANTA CATARINA', 43: 'RIO GRANDE DO SUL', 50: 'MATO GROSSO DO SUL', 51: 'MATO GROSSO', 52: 'GOIÁS', 53: 'DISTRITO FEDERAL'}
     state_id = 0
     for key, value in state_dict.items():
         if value == state_name:
@@ -10,7 +10,7 @@ def getStateUFId(state_name):
     return state_id
 
 def getStateNameUsingUF(state_uf):
-    state_dict = {11: 'Rondonia', 12: 'Acre', 13: 'Amazonas', 14: 'Roraima', 15: 'Para', 16: 'Amapa', 17: 'Tocantins', 21: 'Maranhao', 22: 'Piaui', 23: 'Ceara', 24: 'Rio Grande do Norte', 25: 'Paraiba', 26: 'Pernambuco', 27: 'Alagoas', 28: 'Sergipe', 29: 'Bahia', 31: 'Minas Gerais', 32: 'Espirito Santo', 33: 'Rio de Janeiro', 35: 'Sao Paulo', 41: 'Parana', 42: 'Santa Catarina', 43: 'Rio Grande do Sul', 50: 'Mato Grosso do Sul', 51: 'Mato Grosso', 52: 'Goias', 53: 'Distrito Federal'}
+    state_dict = {11: 'RONDÔNIA', 12: 'ACRE', 13: 'AMAZONAS', 14: 'RORAIMA', 15: 'PARÁ', 16: 'AMAPÁ', 17: 'TOCANTINS', 21: 'MARANHÃO', 22: 'PIAUÍ', 23: 'CEARÁ', 24: 'RIO GRANDE DO NORTE', 25: 'PARAÍBA', 26: 'PERNAMBUCO', 27: 'ALAGOAS', 28: 'SERGIPE', 29: 'BAHIA', 31: 'MINAS GERAIS', 32: 'ESPÍRITO SANTO', 33: 'RIO DE JANEIRO', 35: 'SÃO PAULO', 41: 'PARANÁ', 42: 'SANTA CATARINA', 43: 'RIO GRANDE DO SUL', 50: 'MATO GROSSO DO SUL', 51: 'MATO GROSSO', 52: 'GOIÁS', 53: 'DISTRITO FEDERAL'}
     state_name = ''
     for key, value in state_dict.items():
         if key == state_uf:
@@ -24,8 +24,8 @@ def getStatesPopulation():
     else: 
         return 0
 
-def getSpecificStatePopulation(state_name):
-    population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter(Estado.nome == state_name).first()
+def getSpecificStatePopulation(state_id):
+    population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter(Estado.id == state_id).first()
     if population:
         return population[0]
     else: 

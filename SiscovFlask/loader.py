@@ -1,6 +1,5 @@
 import pandas as pd
 from csvUrls import urls
-import numpy as np
 from models import Estado, Municipio, database_name, db
 from utils import getStateUFId, getStateNameUsingUF
 import psycopg2
@@ -11,41 +10,6 @@ col_names = ['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado
 counties_names = ['UF', 'nome', 'populacao', 'codigoIBGE']
 counties_csv = pd.read_csv('./utils/municipios_dados.csv', skiprows=1, encoding="UTF-8", names=counties_names, sep=';')
 
-'''def insertIntoTable(dataset, state_name):
-    # States
-    #insertAllStatesAndCounties()
-    print("Inserting {} cases...".format(state_name))
-    for row in dataset.index:
-        # Declare variables
-        age = dataset['idade'][row]
-        county_name = dataset['municipio'][row]
-        case_id = dataset['id'][row]
-        notification_date = dataset['dataNotificacao'][row]
-        symptoms_date = dataset['dataInicioSintomas'][row]
-        conditions = dataset['condicoes'][row]
-        case_evolution = dataset['evolucaoCaso'][row]
-        final_classification = dataset['classificacaoFinal'][row]
-        
-        # Transform NaN age values
-        if np.isnan(age):
-            age = 0
-        
-        # Transform NaN county values
-        if county_name != county_name:
-            county_name = "Desconhecido"
-
-        if(row % 10000 == 0):
-            print("row:", row)
-        #print("row:", row)
-
-        # Casos
-        county_id = getCountyId(county_name)
-        exist_case = existCase(case_id)
-
-        # Insert only if not exists, county_id is valid and is a confirmed case
-        if exist_case == False and county_id != -1 and final_classification=='Confirmado Laboratorial':
-            insertCase(case_id, notification_date, symptoms_date, age, conditions, case_evolution, final_classification, county_id)
-   '''     
 def existState(state_name, state_uf):
     state = Estado.query.filter_by(id=state_uf).first()    
     if not state:
@@ -93,8 +57,7 @@ def getCountyPopulation(county_name, state_name):
         return 0
 
 def insertCounty(county_name, state_id, population, codIBGE):
-    codIBGE = "mun_"+str(codIBGE)
-    county_to_be_created = Municipio(nome=county_name,populacao=population, codIBGE=codIBGE, estado_id=state_id)
+    county_to_be_created = Municipio(id=codIBGE, nome=county_name,populacao=population, estado_id=state_id)
     db.session.add(county_to_be_created)
     db.session.commit()
 
@@ -104,18 +67,6 @@ def getCountyId(county_name):
         return county.id
     else:
         return -1
-
-'''def existCase(case_id):
-    case = Casos.query.filter_by(id=case_id).first()
-    if not case:
-        return False
-    else:
-        return True'''
-
-'''def insertCase(case_id, notification_date, symptoms_date, age, conditions, case_evolution, final_classification, county_id):
-    case_to_be_created = Casos(id=case_id, dataNotificacao=notification_date, dataInicioSintomas=symptoms_date, idade=age, condicoes=conditions, evolucaoCaso=case_evolution, classificacaoFinal=final_classification, municipio_id=county_id)
-    db.session.add(case_to_be_created)
-    db.session.commit()'''
 
 def connect_to_db(databaseName):
     conn = psycopg2.connect(user="postgres",
@@ -177,9 +128,9 @@ if __name__ == '__main__':
                         JOIN  municipio on tmp.municipio = municipio.nome 
                         JOIN estado on UPPER(estado.nome) = UPPER(tmp.estado)
                         WHERE tmp."classificacaoFinal"='Confirmado Laboratorial' 
-                        AND tmp.estado='{}' OR tmp.estado='{}'
+                        AND UPPER(tmp.estado)='{}'
                         ON CONFLICT DO NOTHING;
-                '''.format(key, key.upper()))
+                '''.format(key))
 
         print(key, "cases sucessfully updated!")
     print("removing tmp table")
