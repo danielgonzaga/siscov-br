@@ -43,8 +43,17 @@ export class BrazilRegionsComponent implements OnInit {
     let selectedRegion = _.find(this.regions, {nome: selectedRegionId});
     if(regionToBeUnselected === selectedRegion) {
       selectedRegion.isSelected = !selectedRegion.isSelected
+      if(selectedRegion.isSelected) {
+        (document.querySelector('#' + selectedRegionId) as HTMLElement).style.fill = this.verifyColor(selectedRegion.color);
+      } else {
+        (document.querySelector('#' + selectedRegionId) as HTMLElement).style.fill = selectedRegion.color;
+      }
     } else {
-      if(regionToBeUnselected) regionToBeUnselected.isSelected = false;
+      if(regionToBeUnselected) {
+        regionToBeUnselected.isSelected = false;
+        (document.querySelector('#' + regionToBeUnselected.id) as HTMLElement).style.fill = regionToBeUnselected.color;
+      }
+      (document.querySelector('#' + selectedRegionId) as HTMLElement).style.fill = this.verifyColor(selectedRegion.color);
       selectedRegion.isSelected = true;
     }
   }
@@ -54,11 +63,27 @@ export class BrazilRegionsComponent implements OnInit {
     let selectedRegion = _.find(this.regions, {id: id});
     if(regionToBeUnselected === selectedRegion) {
       selectedRegion.isSelected = !selectedRegion.isSelected
+      if(selectedRegion.isSelected) {
+        (document.querySelector('#' + id) as HTMLElement).style.fill = this.verifyColor(selectedRegion.color);
+      } else {
+        (document.querySelector('#' + id) as HTMLElement).style.fill = selectedRegion.color;
+      }
     } else {
       if(regionToBeUnselected !== undefined) {
         regionToBeUnselected.isSelected = false;
-      } 
+        (document.querySelector('#' + regionToBeUnselected.id) as HTMLElement).style.fill = regionToBeUnselected.color;
+      }
+      (document.querySelector('#' + id) as HTMLElement).style.fill = this.verifyColor(selectedRegion.color); 
       selectedRegion.isSelected = true;
     }
+  }
+
+  verifyColor(color) {
+    if(color === '#0377fc')
+      return '#025fca';
+    else if(color === '#dce650')
+      return '#b0b840';
+    else if(color === '#cf4040')
+      return '#a63333'
   }
 }

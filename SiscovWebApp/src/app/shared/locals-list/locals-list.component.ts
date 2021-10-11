@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 export interface ILocalsItem {
@@ -25,24 +25,20 @@ export class LocalsListComponent implements OnInit {
   @Input() items: ILocalsItem[] = [];
   @Output() onAccordionClick = new EventEmitter<string>();
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private el: ElementRef<HTMLElement>) { }
 
   ngOnInit(): void {
-  }
-
-  ngOnChanges() {
-    // this.items.map(item => {
-    //   item.id = item.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_")
-    // })
+    // setTimeout(() => {
+    //   const element = document.querySelector('#mun_1200708'); // id of the scroll to element
+    //   element.scrollIntoView();
+    // }, 5000)
   }
 
   goStatesMap() {
     this.router.navigateByUrl('/states');
   }
 
-  goCountiesMap(stateId, stateName) {
-    console.log("stateId: ", stateId);
-    // const stateNameNormalized = stateName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_")
+  goCountiesMap(stateId) {
     this.router.navigateByUrl('/states/' + stateId);
   }
 

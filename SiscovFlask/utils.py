@@ -40,15 +40,15 @@ def getSpecificCountyPopulation(county_id):
 
 def getSpecificRegionPopulation(region_id):
     if region_id == 1:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "Acre") | (Estado.nome == "Amapa") | (Estado.nome == "Amazonas") | (Estado.nome == "Para") | (Estado.nome == "Rondonia") | (Estado.nome == "Roraima") | (Estado.nome == "Tocantins")).first()
+        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "ACRE") | (Estado.nome == "AMAPÁ") | (Estado.nome == "AMAZONAS") | (Estado.nome == "PARÁ") | (Estado.nome == "RONDÔNIA") | (Estado.nome == "RORAIMA") | (Estado.nome == "TOCANTINS")).first()
     if region_id == 2:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "Alagoas") | (Estado.nome == "Bahia") | (Estado.nome == "Ceara") | (Estado.nome == "Maranhao") | (Estado.nome == "Paraiba") | (Estado.nome == "Piaui") | (Estado.nome == "Pernambuco") | (Estado.nome == "Rio Grande do Norte") | (Estado.nome == "Sergipe")).first()
+        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "ALAGOAS") | (Estado.nome == "BAHIA") | (Estado.nome == "CEARÁ") | (Estado.nome == "MARANHÃO") | (Estado.nome == "PARAÍBA") | (Estado.nome == "PIAUÍ") | (Estado.nome == "PERNAMBUCO") | (Estado.nome == "RIO GRANDE DO NORTE") | (Estado.nome == "SERGIPE")).first()
     if region_id == 3:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "Espirito Santo") | (Estado.nome == "Minas Gerais") | (Estado.nome == "Rio de Janeiro") | (Estado.nome == "Sao Paulo")).first()
+        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "ESPÍRITO SANTO") | (Estado.nome == "MINAS GERAIS") | (Estado.nome == "RIO DE JANEIRO") | (Estado.nome == "SÃO PAULO")).first()
     if region_id == 4:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "Parana") | (Estado.nome == "Santa Catarina") | (Estado.nome == "Rio Grande do Sul")).first()
+        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "PARANÁ") | (Estado.nome == "SANTA CATARINA") | (Estado.nome == "RIO GRANDE DO SUL")).first()
     if region_id == 5:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "Goias") | (Estado.nome == "Mato Grosso") | (Estado.nome == "Mato Grosso do Sul") | (Estado.nome == "Distrito Federal")).first()
+        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "GOIÁS") | (Estado.nome == "MATO GROSSO") | (Estado.nome == "MATO GROSSO DO SUL") | (Estado.nome == "DISTRITO FEDERAL")).first()
     return population[0]
 
 
@@ -57,8 +57,8 @@ def getRegionData(id):
     region_data = {}
     if region_id == 1:
         # Norte
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Acre") | (Estado.nome == "Amapa") | (Estado.nome == "Amazonas") | (Estado.nome == "Para") | (Estado.nome == "Rondonia") | (Estado.nome == "Roraima") | (Estado.nome == "Tocantins")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Acre") | (Estado.nome == "Amapa") | (Estado.nome == "Amazonas") | (Estado.nome == "Para") | (Estado.nome == "Rondonia") | (Estado.nome == "Roraima") | (Estado.nome == "Tocantins")).filter(Casos.evolucaoCaso=='Óbito').count()
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ACRE") | (Estado.nome == "AMAPÁ") | (Estado.nome == "AMAZONAS") | (Estado.nome == "PARÁ") | (Estado.nome == "RONDÔNIA") | (Estado.nome == "RORAIMA") | (Estado.nome == "TOCANTINS")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ACRE") | (Estado.nome == "AMAPÁ") | (Estado.nome == "AMAZONAS") | (Estado.nome == "PARÁ") | (Estado.nome == "RONDÔNIA") | (Estado.nome == "RORAIMA") | (Estado.nome == "TOCANTINS")).filter(Casos.evolucaoCaso=='Óbito').count()
         population=getSpecificRegionPopulation(1)
         region_data["nome"]="Norte"
         region_data["totalCases"]=total_cases
@@ -68,8 +68,8 @@ def getRegionData(id):
         print("region_data: ", region_data)
     elif region_id == 2:
         # Nordeste
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Alagoas") | (Estado.nome == "Bahia") | (Estado.nome == "Ceara") | (Estado.nome == "Maranhao") | (Estado.nome == "Paraiba") | (Estado.nome == "Piaui") | (Estado.nome == "Pernambuco") | (Estado.nome == "Rio Grande do Norte") | (Estado.nome == "Sergipe")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Alagoas") | (Estado.nome == "Bahia") | (Estado.nome == "Ceara") | (Estado.nome == "Maranhao") | (Estado.nome == "Paraiba") | (Estado.nome == "Piaui") | (Estado.nome == "Pernambuco") | (Estado.nome == "Rio Grande do Norte") | (Estado.nome == "Sergipe")).filter(Casos.evolucaoCaso=='Óbito').count()
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ALAGOAS") | (Estado.nome == "BAHIA") | (Estado.nome == "CEARÁ") | (Estado.nome == "MARANHÃO") | (Estado.nome == "PARAÍBA") | (Estado.nome == "PIAUÍ") | (Estado.nome == "PERNAMBUCO") | (Estado.nome == "RIO GRANDE DO NORTE") | (Estado.nome == "SERGIPE")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ALAGOAS") | (Estado.nome == "BAHIA") | (Estado.nome == "CEARÁ") | (Estado.nome == "MARANHÃO") | (Estado.nome == "PARAÍBA") | (Estado.nome == "PIAUÍ") | (Estado.nome == "PERNAMBUCO") | (Estado.nome == "RIO GRANDE DO NORTE") | (Estado.nome == "SERGIPE")).filter(Casos.evolucaoCaso=='Óbito').count()
         population=getSpecificRegionPopulation(2)
         region_data["nome"]="Nordeste"
         region_data["totalCases"]=total_cases
@@ -78,8 +78,8 @@ def getRegionData(id):
         region_data["color"]=colorCalculation(population, total_cases)
     elif region_id == 3:
         # Sudeste
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Espirito Santo") | (Estado.nome == "Minas Gerais") | (Estado.nome == "Rio de Janeiro") | (Estado.nome == "Sao Paulo")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Espirito Santo") | (Estado.nome == "Minas Gerais") | (Estado.nome == "Rio de Janeiro") | (Estado.nome == "Sao Paulo")).filter(Casos.evolucaoCaso=='Óbito').count()
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ESPÍRITO SANTO") | (Estado.nome == "MINAS GERAIS") | (Estado.nome == "RIO DE JANEIRO") | (Estado.nome == "SÃO PAULO")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ESPÍRITO SANTO") | (Estado.nome == "MINAS GERAIS") | (Estado.nome == "RIO DE JANEIRO") | (Estado.nome == "SÃO PAULO")).filter(Casos.evolucaoCaso=='Óbito').count()
         population=getSpecificRegionPopulation(3)
         region_data["nome"]="Sudeste"
         region_data["totalCases"]=total_cases
@@ -88,8 +88,8 @@ def getRegionData(id):
         region_data["color"]=colorCalculation(population, total_cases)
     elif region_id == 4:
         # Sul
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Parana") | (Estado.nome == "Santa Catarina") | (Estado.nome == "Rio Grande do Sul")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Parana") | (Estado.nome == "Santa Catarina") | (Estado.nome == "Rio Grande do Sul")).filter(Casos.evolucaoCaso=='Óbito').count()
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "PARANÁ") | (Estado.nome == "SANTA CATARINA") | (Estado.nome == "RIO GRANDE DO SUL")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "PARANÁ") | (Estado.nome == "SANTA CATARINA") | (Estado.nome == "RIO GRANDE DO SUL")).filter(Casos.evolucaoCaso=='Óbito').count()
         population=getSpecificRegionPopulation(4)
         region_data["nome"]="Sul"
         region_data["totalCases"]=total_cases
@@ -98,8 +98,8 @@ def getRegionData(id):
         region_data["color"]=colorCalculation(population, total_cases)
     elif region_id == 5:
         # Centro-Oeste
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Goias") | (Estado.nome == "Mato Grosso") | (Estado.nome == "Mato Grosso do Sul") | (Estado.nome == "Distrito Federal")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "Parana") | (Estado.nome == "Santa Catarina") | (Estado.nome == "Rio Grande do Sul")).filter(Casos.evolucaoCaso=='Óbito').count()
+        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "GOIÁS") | (Estado.nome == "MATO GROSSO") | (Estado.nome == "MATO GROSSO DO SUL") | (Estado.nome == "DISTRITO FEDERAL")).count()
+        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "GOIÁS") | (Estado.nome == "MATO GROSSO") | (Estado.nome == "MATO GROSSO DO SUL") | (Estado.nome == "DISTRITO FEDERAL")).filter(Casos.evolucaoCaso=='Óbito').count()
         population=getSpecificRegionPopulation(5)
         region_data["nome"]="Centro-Oeste"
         region_data["totalCases"]=total_cases

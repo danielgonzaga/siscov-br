@@ -28,7 +28,7 @@ h2 {
 
 path:hover {
   cursor: pointer;
-  filter: brightness(0.9);
+  filter: brightness(0.8);
 }
 
 .accordion {
