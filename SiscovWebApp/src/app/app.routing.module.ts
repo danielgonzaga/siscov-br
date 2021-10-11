@@ -4,12 +4,13 @@ import { BrazilCountiesComponent } from './map/brazil-counties/brazil-counties.c
 
 import { BrazilRegionsComponent } from './map/brazil-regions/brazil-regions.component';
 import { BrazilStatesComponent } from './map/brazil-states/brazil-states.component';
+import { NotFoundComponent } from './shared/not-found/not-found.component';
 
 const routes: Routes = [
-    {
-        path: '',
-        component: BrazilRegionsComponent,
-    },
+  {
+      path: '',
+      component: BrazilRegionsComponent,
+  },
   {
     path: 'regions',
     component: BrazilRegionsComponent,
@@ -21,7 +22,11 @@ const routes: Routes = [
   {
     path: 'states/:id',
     component: BrazilCountiesComponent,
-  }
+  },
+  {
+    path: '**',
+    component: NotFoundComponent,
+  },
 ];
 
 @NgModule({

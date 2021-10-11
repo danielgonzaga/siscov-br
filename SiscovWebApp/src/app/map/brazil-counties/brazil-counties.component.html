@@ -1,26 +1,47 @@
-<app-acre [stateId]="stateId" *ngIf="stateId === 12"></app-acre>
-<app-alagoas *ngIf="stateId === 27"></app-alagoas>
-<app-amapa *ngIf="stateId === 16"></app-amapa>
-<app-amazonas *ngIf="stateId === 13"></app-amazonas>
-<app-bahia *ngIf="stateId === 29"></app-bahia>
-<app-ceara *ngIf="stateId === 23"></app-ceara>
-<app-espirito-santo *ngIf="stateId === 32"></app-espirito-santo>
-<app-goias *ngIf="stateId === 52"></app-goias>
-<app-maranhao *ngIf="stateId === 21"></app-maranhao>
-<app-mato-grosso *ngIf="stateId === 51"></app-mato-grosso>
-<app-mato-grosso-do-sul *ngIf="stateId === 50"></app-mato-grosso-do-sul>
-<app-minas-gerais *ngIf="stateId === 31"></app-minas-gerais>
-<app-para *ngIf="stateId === 15"></app-para>
-<app-paraiba *ngIf="stateId === 25"></app-paraiba>
-<app-parana *ngIf="stateId === 41"></app-parana>
-<app-pernambuco *ngIf="stateId === 26"></app-pernambuco>
-<app-piaui *ngIf="stateId === 22"></app-piaui>
-<app-rio-de-janeiro *ngIf="stateId === 33"></app-rio-de-janeiro>
-<app-rio-grande-do-norte *ngIf="stateId === 24"></app-rio-grande-do-norte>
-<app-rio-grande-do-sul *ngIf="stateId === 43"></app-rio-grande-do-sul>
-<app-rondonia *ngIf="stateId === 11"></app-rondonia>
-<app-roraima *ngIf="stateId === 14"></app-roraima>
-<app-santa-catarina *ngIf="stateId === 42"></app-santa-catarina>
-<app-sao-paulo *ngIf="stateId === 35"></app-sao-paulo>
-<app-sergipe *ngIf="stateId === 28"></app-sergipe>
-<app-tocantins *ngIf="stateId === 17"></app-tocantins>
+<h2>Visualização por Municípios</h2>
+<div class="locals-links">
+    <a routerLink="">Região&nbsp;</a>
+    <a routerLink="/states">> Estado&nbsp;</a>
+    <a>> <b>{{ stateName }}</b></a>
+</div>
+<div class="wrapper" [ngStyle]="{ display: loading ? 'none' : 'flex' }">
+    <div class="county-map">
+        <app-acre [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 12"></app-acre>
+        <app-alagoas [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 27"></app-alagoas>
+        <app-amapa [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 16"></app-amapa>
+        <app-amazonas [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 13"></app-amazonas>
+        <app-bahia [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 29"></app-bahia>
+        <app-ceara [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 23"></app-ceara>
+        <app-espirito-santo [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 32"></app-espirito-santo>
+        <app-goias [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 52"></app-goias>
+        <app-maranhao [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 21"></app-maranhao>
+        <app-mato-grosso [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 51"></app-mato-grosso>
+        <app-mato-grosso-do-sul [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 50"></app-mato-grosso-do-sul>
+        <app-minas-gerais [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 31"></app-minas-gerais>
+        <app-para [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 15"></app-para>
+        <app-paraiba [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 25"></app-paraiba>
+        <app-parana [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 41"></app-parana>
+        <app-pernambuco [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 26"></app-pernambuco>
+        <app-piaui [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 22"></app-piaui>
+        <app-rio-de-janeiro [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 33"></app-rio-de-janeiro>
+        <app-rio-grande-do-norte [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 24"></app-rio-grande-do-norte>
+        <app-rio-grande-do-sul [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 43"></app-rio-grande-do-sul>
+        <app-rondonia [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 11"></app-rondonia>
+        <app-roraima [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 14"></app-roraima>
+        <app-santa-catarina [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 42"></app-santa-catarina>
+        <app-sao-paulo [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 35"></app-sao-paulo>
+        <app-sergipe [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 28"></app-sergipe>
+        <app-tocantins [stateId]="stateId" (clickedLocal)="getLocal($event)" *ngIf="stateId === 17"></app-tocantins>
+    </div>
+    <div class="accordion scrollbar-custom">
+        <app-locals-list *ngIf="counties.length > 0"
+            [items]="counties"
+            [loading]="loading"
+            (onAccordionClick)="onAccordionClick($event)"
+        ></app-locals-list>
+    </div>
+</div>
+<div class="loader" *ngIf="loading">
+    <app-loader></app-loader>
+</div>
+

@@ -10,6 +10,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { LocalsListItemComponent } from './locals-list/components/locals-list-item/locals-list-item.component';
 import { LoaderComponent } from './loader/loader.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { LoaderComponent } from './loader/loader.component';
     LocalsListComponent,
     LocalsListItemComponent,
     LoaderComponent,
+    NotFoundComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +33,7 @@ import { LoaderComponent } from './loader/loader.component';
     SearchBarComponent,
     LocalsListComponent,
     LoaderComponent,
+    NotFoundComponent,
   ]
 })
 export class SharedModule { }

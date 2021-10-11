@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-mato-grosso',
@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MatoGrossoComponent implements OnInit {
 
+  @Output() clickedLocal = new EventEmitter;
+
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  getLocal(event) {
+    this.clickedLocal.emit(event);
   }
 
 }
