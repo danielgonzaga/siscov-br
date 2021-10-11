@@ -8,14 +8,12 @@ import { AccordionModule } from 'primeng/accordion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { ScrollableItemDirective } from '../directives/scrollable-item.directive';
 
 @NgModule({
   declarations: [
     NavbarComponent,
     SearchBarComponent,
     LocalsListComponent,
-    ScrollableItemDirective
   ],
   imports: [
     CommonModule,
