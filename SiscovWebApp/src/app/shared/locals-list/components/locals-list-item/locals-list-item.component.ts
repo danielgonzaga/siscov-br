@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class LocalsListItemComponent implements OnInit {
 
   @Input() item;
+  @Output() onClickOpenNewsModal = new EventEmitter();
 
   constructor(private router: Router, private elRef: ElementRef) { }
 
@@ -25,5 +26,9 @@ export class LocalsListItemComponent implements OnInit {
 
   scrollIntoView() {
     this.elRef.nativeElement.scrollIntoView({behavior: 'smooth'});
+  }
+
+  openNewsModal() {
+    this.onClickOpenNewsModal.emit();
   }
 }

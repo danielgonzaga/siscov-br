@@ -38,6 +38,7 @@
             [items]="counties"
             [loading]="loading"
             (onAccordionClick)="onAccordionClick($event)"
+            (onClickOpenNewsModal)="openNewsModal()"
         ></app-locals-list>
     </div>
 </div>
@@ -45,3 +46,7 @@
     <app-loader></app-loader>
 </div>
 
+<app-news-modal 
+    [isOpen]="isNewsModalOpen"
+    (close)="closeNewsModal()"
+></app-news-modal>

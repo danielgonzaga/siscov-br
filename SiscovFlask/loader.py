@@ -4,7 +4,7 @@ from models import Estado, Municipio, database_name, db
 from utils import getStateUFId, getStateNameUsingUF
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-import unidecode
+
 
 col_names = ['id', 'dataNotificacao', 'dataInicioSintomas', 'estado', 'municipio', 'evolucaoCaso', 'classificacaoFinal']
 
@@ -58,8 +58,9 @@ def getCountyPopulation(county_name, state_name):
         return 0
 
 def insertCounty(county_name, state_id, population, codIBGE):
-    normalized_county_name = unidecode.unidecode(county_name)
-    county_to_be_created = Municipio(id=codIBGE, nome=normalized_county_name, populacao=population, estado_id=state_id)
+    # normalized_county_name = unidecode.unidecode(county_name)
+    # county_to_be_created = Municipio(id=codIBGE, nome=normalized_county_name, populacao=population, estado_id=state_id)
+    county_to_be_created = Municipio(id=codIBGE, nome=county_name, populacao=population, estado_id=state_id)
     db.session.add(county_to_be_created)
     db.session.commit()
 

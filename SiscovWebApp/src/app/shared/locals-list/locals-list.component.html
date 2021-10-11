@@ -4,6 +4,7 @@
             *ngFor="let item of items; let index = index"
             [item]="item"
             (click)="verifyAccordionSelection(item)"
+            (onClickOpenNewsModal)="openNewsModal()"
         >
         </app-locals-list-item>
     </p-accordion>
