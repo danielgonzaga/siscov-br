@@ -34,8 +34,8 @@ def findAllRegions():
         sudeste_json = getRegionData(3)
         sul_json = getRegionData(4)
         centro_oeste_json = getRegionData(5)
-
-    return jsonify(norte_json, nordeste_json, sudeste_json, sul_json, centro_oeste_json)
+    return jsonify(centro_oeste_json, nordeste_json, norte_json, sudeste_json, sul_json)
+    #return jsonify(norte_json, nordeste_json, sudeste_json, sul_json, centro_oeste_json)
 
 @app.route('/region/<region_id>')
 @cross_origin()
@@ -48,7 +48,7 @@ def findRegionById(region_id):
 @cross_origin()
 def findAllStates():
     if request.method == 'GET':
-        all_states = Estado.query.all()
+        all_states = Estado.query.order_by(Estado.nome).all()
         result = states_schema.dump(all_states)
         for state in result:
             state['isState']=True
@@ -125,7 +125,7 @@ def findStateByName(state_name):
 @cross_origin()
 def findAllCounties(state_id):
     if request.method == 'GET':
-        all_counties = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
+        all_counties = Municipio.query.order_by(Municipio.nome).join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
         result = counties_schema.dump(all_counties)
         for county in result:
             county['isState']=False
