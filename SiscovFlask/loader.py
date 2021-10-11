@@ -5,7 +5,7 @@ from utils import getStateUFId, getStateNameUsingUF
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-col_names = ['id', 'dataNotificacao', 'dataInicioSintomas', 'condicoes', 'estado', 'municipio', 'idade', 'evolucaoCaso', 'classificacaoFinal']
+col_names = ['id', 'dataNotificacao', 'dataInicioSintomas', 'estado', 'municipio', 'evolucaoCaso', 'classificacaoFinal']
 
 counties_names = ['UF', 'nome', 'populacao', 'codigoIBGE']
 counties_csv = pd.read_csv('./utils/municipios_dados.csv', skiprows=1, encoding="UTF-8", names=counties_names, sep=';')
@@ -97,8 +97,6 @@ if __name__ == '__main__':
             id VARCHAR(255) NOT NULL,
             "dataNotificacao" VARCHAR(255) NOT NULL,
             "dataInicioSintomas" VARCHAR(255),
-            idade VARCHAR(20),
-            condicoes VARCHAR(500),
             estado VARCHAR(255),
             municipio VARCHAR(500),
             "evolucaoCaso" VARCHAR(500),
@@ -123,7 +121,7 @@ if __name__ == '__main__':
         cursor.execute('''
                     INSERT INTO casos(id, "dataNotificacao", "dataInicioSintomas", "evolucaoCaso", 
                             "classificacaoFinal", municipio_id)
-                        SELECT tmp.id, tmp."dataNotificacao", tmp."dataInicioSintomas", tmp.idade, tmp.condicoes, tmp."evolucaoCaso",
+                        SELECT tmp.id, tmp."dataNotificacao", tmp."dataInicioSintomas", tmp."evolucaoCaso",
                         tmp."classificacaoFinal", m.id FROM tmp 
                         JOIN  (select municipio.nome, municipio.estado_id, municipio.id from municipio) as m 
                         on tmp.municipio = m.nome 
