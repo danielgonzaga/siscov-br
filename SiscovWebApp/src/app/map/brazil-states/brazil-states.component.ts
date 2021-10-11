@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ILocalsItem } from 'src/app/shared/locals-list/locals-list.component';
+import { ILocalsItem, LocalsListComponent } from 'src/app/shared/locals-list/locals-list.component';
 import * as _ from 'lodash';
 import { MapService } from '../services/map.service';
 
@@ -11,6 +11,7 @@ import { MapService } from '../services/map.service';
   styleUrls: ['./brazil-states.component.css']
 })
 export class BrazilStatesComponent implements OnInit {
+  @ViewChild(LocalsListComponent) localsListComponent: LocalsListComponent;
 
   states  = [];
   loading: boolean = false;
@@ -61,6 +62,7 @@ export class BrazilStatesComponent implements OnInit {
       (document.querySelector('#' + selectedStateId) as HTMLElement).style.fill = this.verifyColor(selectedState.color);
       selectedState.isSelected = true;
     }
+    this.localsListComponent.goToScroll(parsedStateId);
   }
 
   onAccordionClick(id) {

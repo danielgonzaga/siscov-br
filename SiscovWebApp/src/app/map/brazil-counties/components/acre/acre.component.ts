@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ViewChildren } from '@angular/core';
 
 import * as _ from 'lodash';
+import { LocalsListComponent } from 'src/app/shared/locals-list/locals-list.component';
 import { MapService } from '../../../services/map.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { MapService } from '../../../services/map.service';
   styleUrls: ['./acre.component.css']
 })
 export class AcreComponent implements OnInit {
+  @ViewChild(LocalsListComponent) localsListComponent: LocalsListComponent;
 
   @Input() stateId: number;
   counties = [];
@@ -57,6 +59,7 @@ export class AcreComponent implements OnInit {
       (document.querySelector('#' + selectedCountyId) as HTMLElement).style.fill = this.verifyColor(selectedCounty.color);
       selectedCounty.isSelected = true;
     }
+    this.localsListComponent.goToScroll(parsedCountyId);
   }
 
   onAccordionClick(id) {

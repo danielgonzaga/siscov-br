@@ -1,5 +1,7 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+
+import * as _ from 'lodash';
+import { LocalsListItemComponent } from './components/locals-list-item/locals-list-item.component';
 
 export interface ILocalsItem {
   nome: string,
@@ -24,25 +26,19 @@ export class LocalsListComponent implements OnInit {
 
   @Input() items: ILocalsItem[] = [];
   @Output() onAccordionClick = new EventEmitter<string>();
-
-  constructor(private router: Router, private el: ElementRef<HTMLElement>) { }
+  @ViewChildren(LocalsListItemComponent) viewChildren!: QueryList<LocalsListItemComponent>;
+  
+  constructor() { }
 
   ngOnInit(): void {
-    // setTimeout(() => {
-    //   const element = document.querySelector('#mun_1200708'); // id of the scroll to element
-    //   element.scrollIntoView();
-    // }, 5000)
-  }
-
-  goStatesMap() {
-    this.router.navigateByUrl('/states');
-  }
-
-  goCountiesMap(stateId) {
-    this.router.navigateByUrl('/states/' + stateId);
   }
 
   verifyAccordionSelection(item) {
     this.onAccordionClick.emit(item.id);
+  }
+
+  goToScroll(id) {
+    let index = _.findIndex(this.items, function(item) { return item.id == id })
+    this.viewChildren.toArray()[+index].scrollIntoView()
   }
 }

@@ -8,12 +8,16 @@ import { AccordionModule } from 'primeng/accordion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { LocalsListItemComponent } from './locals-list/components/locals-list-item/locals-list-item.component';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   declarations: [
     NavbarComponent,
     SearchBarComponent,
     LocalsListComponent,
+    LocalsListItemComponent,
+    LoaderComponent,
   ],
   imports: [
     CommonModule,
@@ -25,7 +29,8 @@ import { RouterModule } from '@angular/router';
   exports: [
     NavbarComponent,
     SearchBarComponent,
-    LocalsListComponent
+    LocalsListComponent,
+    LoaderComponent,
   ]
 })
 export class SharedModule { }

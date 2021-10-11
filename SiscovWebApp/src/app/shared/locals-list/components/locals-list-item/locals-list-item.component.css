@@ -1,0 +1,98 @@
+.accordion-wrapper {
+    width: 100%;
+    height: 660px;
+    margin: 0 5% 0 0;
+    padding: 0 5%;
+    /*border-left: 1px solid #8d8d8d;*/
+}
+
+::ng-deep .p-accordion .p-accordion-header .p-accordion-header-link .p-accordion-toggle-icon {
+    display: none;
+}
+
+::ng-deep .p-accordion .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+    background-color: transparent;
+    border: none;
+  }
+
+::ng-deep .p-accordion p-accordiontab .p-accordion-content {
+    background-color: transparent;
+    border: none;
+}
+
+::ng-deep .p-accordion .p-accordion-header .p-accordion-header-link {
+    background-color: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom-color: linear-gradient(#8d8d8d, blue);
+}
+
+:ng-deep .p-accordion .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+    background-color: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom-color: #8d8d8d;
+}
+
+:ng-deep .p-accordion .p-accordion-header .p-accordion-header-link .p-accordion-toggle-icon {
+    display: none !important;
+}
+
+::ng-deep .p-accordion-header-text {
+    font-family: 'Rubik';
+    font-size: 1.5em;
+    text-transform: uppercase;
+}
+
+h4 {
+    font-family: 'Rubik';
+    font-weight: normal;
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+
+h4:first-child {
+    margin-top: 0;
+}
+
+p-accordionTab h3 {
+    font-family: 'Rubik';
+    margin-top: 0;
+    color: #000;
+    font-size: 1.5em;
+}
+
+p-accordionTab h3:last-child {
+    margin-bottom: 1.5em;
+    font-size: 1.5em;
+}
+
+.variant-button {
+    background-color: #d10e0e;
+    color: #fff;
+    padding: 0.6em;
+    width: fit-content;
+    margin-bottom: 2em;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.variant-button:hover {
+    background-color: #ad0909;
+}
+
+.inner-map-button {
+    background-color: #76db52;
+    color: #fff;
+    padding: 0.6em;
+    width: fit-content;
+    margin-bottom: 2em;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.inner-map-button:hover {
+    background-color: #5bb13c;
+}
