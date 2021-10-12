@@ -52,15 +52,11 @@ class Casos(db.Model):
 class Noticias(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(500), nullable=False)
-    municipio_nome = db.Column(db.String(200))
-    estado_nome = db.Column(db.String(200))
     municipio_noticia = db.relationship('Municipio', secondary='noticias_municipio')
     estado_noticia = db.relationship('Estado', secondary='noticias_estado')
 
-    def __init__(self, url, municipio_nome, estado_nome, municipio_noticia, estado_noticia):
+    def __init__(self, url, municipio_noticia, estado_noticia):
         self.url = url
-        self.municipio_nome = municipio_nome
-        self.estado_nome = estado_nome
         self.municipio_noticia = municipio_noticia
         self.estado_noticia = estado_noticia
 
