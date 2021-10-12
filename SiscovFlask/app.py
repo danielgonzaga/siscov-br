@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 import pip._vendor.requests as req
 from models import *
 from utils import *
+import json, os.path
 
 # Routes
 # (OK) /region -> traz todas as regioes
@@ -48,30 +49,40 @@ def findRegionById(region_id):
 @cross_origin()
 def findAllStates():
     if request.method == 'GET':
-        all_states = Estado.query.order_by(Estado.nome).all()
-        result = states_schema.dump(all_states)
-        for state in result:
-            state['isState']=True
-            state['isRegion']=False
-            state['isCounty']=False
-            state['isSelected']=False
-         
-            # We need news table to set variant cases 
-            state['variantCases']=False
-    
-            # Getting total cases per State
-            total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).count()
-            state['totalCases']=total_cases
+        cache_file = './json/{}.json'.format("states")
+        cache_exists = os.path.exists(cache_file)
 
-            # Getting total deaths per State
-            total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).filter(Casos.evolucaoCaso=='Óbito').count()
-            state['totalDeaths']=total_deaths
+        if cache_exists:
+            with open(cache_file, 'r', encoding='utf-8') as json_file:
+                result = json.load(json_file)
+        else:
+            all_states = Estado.query.order_by(Estado.nome).all()
+            result = states_schema.dump(all_states)
+            for state in result:
+                state['isState']=True
+                state['isRegion']=False
+                state['isCounty']=False
+                state['isSelected']=False
+            
+                # We need news table to set variant cases 
+                state['variantCases']=False
+        
+                # Getting total cases per State
+                total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).count()
+                state['totalCases']=total_cases
 
-            population=getSpecificStatePopulation(state['id'])
-            state['population']=population
+                # Getting total deaths per State
+                total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).filter(Casos.evolucaoCaso=='Óbito').count()
+                state['totalDeaths']=total_deaths
+
+                population=getSpecificStatePopulation(state['id'])
+                state['population']=population
+                
+                state['color']=colorCalculation(population, total_cases)
             
-            state['color']=colorCalculation(population, total_cases)
-            
+            with open(cache_file, 'w', encoding='utf8') as json_file:
+                    json.dump(result, json_file, ensure_ascii=False)
+
         return jsonify(result)
 
 #specific state
@@ -125,25 +136,38 @@ def findStateByName(state_name):
 @cross_origin()
 def findAllCounties(state_id):
     if request.method == 'GET':
-        all_counties = Municipio.query.order_by(Municipio.nome).join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
-        result = counties_schema.dump(all_counties)
-        for county in result:
-            county['isState']=False
-            county['isRegion']=False
-            county['isCounty']=True
-            county['isSelected']=False
-            county['variantCases']=False
+        cache_file = './json/{}.json'.format(state_id)
+        cache_exists = os.path.exists(cache_file)
 
-            total_cases = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).count()
-            county['totalCases']=total_cases
-
-            total_deaths = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).filter(Casos.evolucaoCaso=='Óbito').count()
-            county['totalDeaths']=total_deaths
-
-            population = getSpecificCountyPopulation(county['id'])
-            county['population']=population
+        if cache_exists:
+            with open(cache_file, 'r', encoding='utf-8') as json_file:
+                result = json.load(json_file)
+        else:
+            print(Municipio.query.order_by(Municipio.nome).join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id))
+            all_counties = Municipio.query.order_by(Municipio.nome).join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
+            result = counties_schema.dump(all_counties)
             
-            county['color']=colorCalculation(population, total_cases)
+            for county in result:
+                county['isState']=False
+                county['isRegion']=False
+                county['isCounty']=True
+                county['isSelected']=False
+                county['variantCases']=False
+
+                total_cases = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).count()
+                county['totalCases']=total_cases
+
+                total_deaths = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).filter(Casos.evolucaoCaso=='Óbito').count()
+                county['totalDeaths']=total_deaths
+
+                population = getSpecificCountyPopulation(county['id'])
+                county['population']=population
+                
+                county['color']=colorCalculation(population, total_cases)
+
+            with open(cache_file, 'w', encoding='utf8') as json_file:
+                json.dump(result, json_file, ensure_ascii=False)
+
         return jsonify(result)
 
 @app.route("/state/<state_id>/county/<county_id>")
