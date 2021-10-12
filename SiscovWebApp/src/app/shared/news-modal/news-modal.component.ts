@@ -7,21 +7,27 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class NewsModalComponent implements OnInit {
 
-  @Input() localName: string;
+  @Input() localName: string = "Acrelândia";
   @Input() isOpen: boolean = false;
   @Output() close = new EventEmitter();
   img = '../../assets/bandeira-acre.png'
-  news = [{title: "Variante Delta encontrada em Acrelândia", link: 'https://google.com', id: 1}, 
-          {title: "Variante Omega encontrada em Acrelândia", link: 'https://google.com', id: 2}, 
-          {title: "Variante Zeta encontrada em Acrelândia", link: 'https://google.com', id: 3}, 
-          {title: "Variante Pica-Pau encontrada em Acrelândia", link: 'https://google.com', id: 4}, 
-          {title: "Variante Gohan encontrada em Acrelândia", link: 'https://google.com', id: 5},
-        ] 
+  loading: boolean = false;
+  news;
 
 
   constructor() { }
 
   ngOnInit(): void {
+    this.loading = true;
+    setTimeout(() => {
+      this.news = [{title: "Variante Delta encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 1}, 
+                  {title: "Variante Omega encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 2}, 
+                  {title: "Variante Zeta encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 3}, 
+                  {title: "Variante Pica-Pau encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 4}, 
+                  {title: "Variante Gohan encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 5},
+                  ] 
+      this.loading = false;
+    }, 3000);
   }
 
   closeNewsModal() {
