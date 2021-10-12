@@ -1,5 +1,7 @@
 SiscovWebApp/node_modules
 SiscovFlask/datasets/*
+SiscovFlask/json/*
+!SiscovFlask/json/.gitkeep
 !SiscovFlask/datasets/.gitkeep
 __pycache__
 volume
