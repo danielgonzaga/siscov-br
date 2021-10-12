@@ -77,8 +77,6 @@ import { TocantinsComponent } from './brazil-counties/components/tocantins/tocan
     BrazilRegionsComponent,
     BrazilStatesComponent,
     BrazilCountiesComponent,
-    AcreComponent,
-    RioDeJaneiroComponent,
   ]
 })
 export class MapModule { }

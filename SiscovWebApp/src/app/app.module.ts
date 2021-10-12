@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { MapModule } from './map/map.module';
 import { AppRoutingModule } from './app.routing.module';
-import { MatLinkPreviewModule } from '@angular-material-extensions/link-preview';
 
 @NgModule({
   declarations: [
@@ -17,8 +16,7 @@ import { MatLinkPreviewModule } from '@angular-material-extensions/link-preview'
     BrowserAnimationsModule,
     SharedModule,
     MapModule,
-    AppRoutingModule,
-    MatLinkPreviewModule.forRoot()
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -55,3 +55,24 @@ body.modal-open {
 .x-icon {
     cursor: pointer;
 }
+
+.product-item .product-item-content {
+    border: 1px solid var(--surface-d);
+    border-radius: 3px;
+    margin: .3rem;
+    text-align: left;
+    padding: 0;
+    width: 85%;
+    height: 75vh;
+}
+
+.product-item  .product-image {
+    width: 50%;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
+}
+
+a {
+    font-size: 19px;
+    font-weight: bold;
+    text-align: left;
+}

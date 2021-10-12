@@ -12,7 +12,7 @@ import { LocalsListItemComponent } from './locals-list/components/locals-list-it
 import { LoaderComponent } from './loader/loader.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { NewsModalComponent } from './news-modal/news-modal.component';
-import { MatLinkPreviewModule } from '@angular-material-extensions/link-preview';
+import { CarouselModule } from 'primeng/carousel';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ import { MatLinkPreviewModule } from '@angular-material-extensions/link-preview'
     BrowserAnimationsModule,
     RouterModule,
     AccordionModule,
-    // MatLinkPreviewModule
+    CarouselModule,
   ],
   exports: [
     NavbarComponent,

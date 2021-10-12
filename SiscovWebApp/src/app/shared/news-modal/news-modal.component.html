@@ -8,13 +8,20 @@
             </svg>
                 
         </div>
-        <h2>Mundo</h2>
-        <h1>Hello</h1>
-        <h2>World</h2>
-        <h1>Hola</h1>
-        <h2>Mundo</h2>
-        <h1>Spin</h1>
-        <h2>Dash</h2>
+        <p-carousel [value]="news" styleClass="custom-carousel" [numVisible]="3" [numScroll]="1" [circular]="true">
+            <ng-template let-news pTemplate="item">
+                <div class="product-item">
+                    <div class="product-item-content">
+                        <div class="p-mb-3">
+                        </div>
+                        <div>
+                            <img [src]="img" width="100%">
+                            <a [href]="news.link" target="_blank" class="p-mb-1">{{news.title}}</a>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-carousel>
     </div>
 </div>
 <div *ngIf="isOpen" class="modal-background"></div>
