@@ -1,4 +1,4 @@
-from models import Estado, Municipio, Casos
+from models import Estado, Municipio, Casos, Noticias, noticias_estado, noticias_municipio
 from sqlalchemy import func
 
 def getStateUFId(state_name):
@@ -113,6 +113,32 @@ def getRegionData(id):
     region_data['isSelected']=False
     region_data['variantCases']=False
     return region_data
+
+def getRegionNews(id):
+    region_id = int(id)
+    #region_data = {}
+    if region_id == 1:
+        # Norte
+        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 11) | (Estado.id == 12) | (Estado.id == 13) | (Estado.id == 14) | (Estado.id == 15) | (Estado.id == 16) | (Estado.id == 17)).all()
+        
+        
+    elif region_id == 2:
+        # Nordeste
+        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 21) | (Estado.id == 22) | (Estado.id == 23) | (Estado.id == 24) | (Estado.id == 25) | (Estado.id == 26) | (Estado.id == 27) | (Estado.id == 28) | (Estado.id == 29)).all()
+
+    elif region_id == 3:
+        # Sudeste
+        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 31) | (Estado.id == 32) | (Estado.id == 33) | (Estado.id == 35)).all()
+
+    elif region_id == 4:
+        # Sul
+        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 41) | (Estado.id == 42) | (Estado.id == 43)).all()
+
+    elif region_id == 5:
+        # Centro-Oeste
+        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 50) | (Estado.id == 51) | (Estado.id == 52) | (Estado.id == 53)).all()
+
+    return news_query
 
 def colorCalculation(population, total_cases):
     if population:

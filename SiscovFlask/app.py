@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, jsonify
-from flask_cors import CORS, cross_origin
-import pip._vendor.requests as req
+from flask import request, jsonify
+from flask_cors import cross_origin
 from models import *
 from utils import *
 import json, os.path
@@ -196,24 +195,64 @@ def findCountyById(state_id, county_id):
         county['color']=colorCalculation(population, total_cases)
         return jsonify(county)
 
-@app.route("/state/<state_id>/county/<county_id>/variants")
-@cross_origin()
-def getURLMeta(state_id, county_id):
-    if request.method == 'GET':
-        news_query = Noticias.query.join(noticias_municipio, noticias_municipio.c.noticia_id == Noticias.id).join(Municipio, noticias_municipio.c.municipio_id == Municipio.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).first()
-        news = news_schema.dump(news_query)
-        print(news)
-        
-        url = news['url']
-        meta_url = link_preview(url)
-        result = ()
-      
-        result += ("title: " + meta_url.title,)
-        result += ("description: " + meta_url.description,)
-        result += ("image: " + meta_url.image,)
-        result += ("force_title: " + meta_url.force_title,)
-        result += ("absolute_image: " + meta_url.absolute_image,)
 
+@app.route('/region/<region_id>/news')
+@cross_origin()
+def getRegionMetaURL(region_id):
+    if request.method == 'GET':
+        news_query = getRegionNews(region_id)
+        result = news_schema.dump(news_query)
+        print(result)
+
+        for news in result:
+            meta_url = link_preview(news['url'])
+
+            news['title'] = meta_url.title
+            news['description'] = meta_url.description
+            news['image'] =  meta_url.image
+            news['force_title'] = meta_url.force_title
+            news['absolute_image'] = meta_url.absolute_image
+            
         return jsonify(result)
+
+@app.route("/state/<state_id>/news")
+@cross_origin()
+def getStateMetaURL(state_id):
+    if request.method == 'GET':
+        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter(Estado.id == state_id).all()
+
+        result = news_schema.dump(news_query)
+        print(result)
+
+        for news in result:
+            meta_url = link_preview(news['url'])
+
+            news['title'] = meta_url.title
+            news['description'] = meta_url.description
+            news['image'] =  meta_url.image
+            news['force_title'] = meta_url.force_title
+            news['absolute_image'] = meta_url.absolute_image
+           
+        return jsonify(result)
+
+@app.route("/state/<state_id>/county/<county_id>/news")
+@cross_origin()
+def getCountyMetaURL(state_id, county_id):
+    if request.method == 'GET':
+        news_query = Noticias.query.join(noticias_municipio, noticias_municipio.c.noticia_id == Noticias.id).join(Municipio, noticias_municipio.c.municipio_id == Municipio.id).join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).all()
+        result = news_schema.dump(news_query)
+        print(result)
+
+        for news in result:
+            meta_url = link_preview(news['url'])
+
+            news['title'] = meta_url.title
+            news['description'] = meta_url.description
+            news['image'] =  meta_url.image
+            news['force_title'] = meta_url.force_title
+            news['absolute_image'] = meta_url.absolute_image
+           
+        return jsonify(result)
+
 if __name__ == '__main__':
     app.run()
