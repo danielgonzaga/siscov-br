@@ -37,7 +37,7 @@
         <app-locals-list *ngIf="counties.length > 0"
             [items]="counties"
             (onAccordionClick)="onAccordionClick($event)"
-            (onClickOpenNewsModal)="openNewsModal()"
+            (onClickOpenNewsModal)="openNewsModal($event)"
         ></app-locals-list>
     </div>
 </div>
@@ -46,6 +46,9 @@
 </div>
 
 <app-news-modal 
+    *ngIf="isNewsModalOpen"
     [isOpen]="isNewsModalOpen"
+    [variantLocal]="variantCountyId"
+    [variantStateId]="stateId"
     (close)="closeNewsModal()"
 ></app-news-modal>

@@ -43,7 +43,7 @@ export class LocalsListComponent implements OnInit {
     this.viewChildren.toArray()[+index].scrollIntoView()
   }
 
-  openNewsModal() {
-    this.onClickOpenNewsModal.emit();
+  openNewsModal(event) {
+    this.onClickOpenNewsModal.emit(event);
   }
 }
