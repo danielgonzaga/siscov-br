@@ -58,13 +58,15 @@ body.modal-open {
 }
 
 .product-item .product-item-content {
+    position: relative;
     border: 1px solid var(--surface-d);
     border-radius: 3px;
-    margin: .3rem;
     text-align: left;
     padding: 0;
     width: 85%;
+    min-height: 65vh;
     max-height: 65vh;
+    margin: 0 auto
 }
 
 .product-item  .product-image {
@@ -72,7 +74,7 @@ body.modal-open {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
 }
 
-a {
+.link-title {
     font-size: 19px;
     font-weight: bold;
     text-align: left;
@@ -82,6 +84,15 @@ a {
     display: -webkit-box; 
     -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
+}
+
+.image-wrapper {
+    max-height: 30vh;
+    overflow: hidden;
+}
+
+.news-image {
+    width: 100%
 }
 
 .link-description {
@@ -103,6 +114,8 @@ a {
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+    position: absolute;
+    bottom: 0;
 }
 
 .loader {

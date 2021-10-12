@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ILocalsItem } from 'src/app/shared/locals-list/locals-list.component';
 
 @Injectable({
   providedIn: 'root'

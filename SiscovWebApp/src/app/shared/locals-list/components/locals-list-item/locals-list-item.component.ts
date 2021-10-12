@@ -29,6 +29,6 @@ export class LocalsListItemComponent implements OnInit {
   }
 
   openNewsModal() {
-    this.onClickOpenNewsModal.emit();
+    this.onClickOpenNewsModal.emit(this.item);
   }
 }

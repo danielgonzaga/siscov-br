@@ -146,10 +146,11 @@ def getStateNews(state_id):
 def getCountyNews(state_id, county_id):
     if request.method == 'GET':
         news_query = Noticias.query.join(noticias_municipio, noticias_municipio.c.noticia_id == Noticias.id).join(Municipio, noticias_municipio.c.municipio_id == Municipio.id).join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).all()
-        result = news_schema.dump(news_query)
         
+        result = news_schema.dump(news_query)
+
         result = formatNews(result)
-           
+
         return jsonify(result)
 
 if __name__ == '__main__':
