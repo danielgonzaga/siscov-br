@@ -4,6 +4,7 @@ import pip._vendor.requests as req
 from models import *
 from utils import *
 import json, os.path
+from linkpreview import link_preview
 
 # Routes
 # (OK) /region -> traz todas as regioes
@@ -25,6 +26,7 @@ region_schema = RegionSchema()
 regions_schema = RegionSchema(many=True)
 county_schema = CountySchema()
 counties_schema = CountySchema(many=True)
+news_schema = NoticiasSchema()
 
 @app.route('/region')
 @cross_origin()
@@ -194,5 +196,24 @@ def findCountyById(state_id, county_id):
         county['color']=colorCalculation(population, total_cases)
         return jsonify(county)
 
+@app.route("/state/<state_id>/county/<county_id>/variants")
+@cross_origin()
+def getURLMeta(state_id, county_id):
+    if request.method == 'GET':
+        news_query = Noticias.query.join(noticias_municipio, noticias_municipio.c.noticia_id == Noticias.id).join(Municipio, noticias_municipio.c.municipio_id == Municipio.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).first()
+        news = news_schema.dump(news_query)
+        print(news)
+        
+        url = news['url']
+        meta_url = link_preview(url)
+        result = ()
+      
+        result += ("title: " + meta_url.title,)
+        result += ("description: " + meta_url.description,)
+        result += ("image: " + meta_url.image,)
+        result += ("force_title: " + meta_url.force_title,)
+        result += ("absolute_image: " + meta_url.absolute_image,)
+
+        return jsonify(result)
 if __name__ == '__main__':
     app.run()
