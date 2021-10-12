@@ -24,13 +24,10 @@ export class NewsModalComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.newsService.listAllCountyNews(this.variantStateId, this.variantLocal.id)
-    .pipe(
-      map(data => {
-        //return data.forEach(item => item.split(': ')[1]);
-      })
-    ).subscribe(news => {
+    .subscribe(news => {
+      console.log("this.variantLocal: ", this.variantLocal);
+      console.log("this.variantStateId: ", this.variantStateId);
       this.news = news;
-      console.log("news: ", news);
       this.loading = false;
     })
     // setTimeout(() => {

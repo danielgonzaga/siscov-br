@@ -25,7 +25,7 @@ region_schema = RegionSchema()
 regions_schema = RegionSchema(many=True)
 county_schema = CountySchema()
 counties_schema = CountySchema(many=True)
-news_schema = NoticiasSchema()
+news_schema = NoticiasSchema(many=True)
 
 @app.route('/region')
 @cross_origin()
@@ -241,17 +241,18 @@ def getCountyMetaURL(state_id, county_id):
     if request.method == 'GET':
         news_query = Noticias.query.join(noticias_municipio, noticias_municipio.c.noticia_id == Noticias.id).join(Municipio, noticias_municipio.c.municipio_id == Municipio.id).join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).all()
         result = news_schema.dump(news_query)
-        print(result)
-
+        print(news_query)  
+        
         for news in result:
             meta_url = link_preview(news['url'])
-
             news['title'] = meta_url.title
+            print(news['title'])
             news['description'] = meta_url.description
             news['image'] =  meta_url.image
             news['force_title'] = meta_url.force_title
             news['absolute_image'] = meta_url.absolute_image
-           
+        
+        print(result)   
         return jsonify(result)
 
 if __name__ == '__main__':

@@ -88,4 +88,4 @@ class CountySchema(ma.Schema):
 
 class NoticiasSchema(ma.Schema):
     class Meta:
-        fields=('url',)
+        fields=('id', 'url')

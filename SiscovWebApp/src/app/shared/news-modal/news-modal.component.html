@@ -1,7 +1,7 @@
 <div *ngIf="isOpen" class="modal">
     <div class="modal-body">
         <div class="modal-header">
-            <span class="modal-title">Notícias sobre variantes - {{ localName }}</span>
+            <span class="modal-title">Notícias sobre variantes - {{ variantLocal.nome }}</span>
             <svg class="x-icon" (click)="closeNewsModal()" width="20" height="20" viewBox="0 0 80 78" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <line x1="75.5355" y1="3.53553" x2="4.82486" y2="74.2462" stroke="black" stroke-width="10"/>
                 <line y1="-5" x2="100" y2="-5" transform="matrix(0.707107 0.707107 0.707107 -0.707107 8 0)" stroke="black" stroke-width="10"/>
@@ -15,11 +15,15 @@
                         <div class="p-mb-3">
                         </div>
                         <div>
-                            <img [src]="news.image" width="100%">
-                            <a class="link-title" [href]="news.link" target="_blank">{{ news.title }}</a>
-                            <br>
-                            <span class="link-description">{{ news.description }}</span>
-                            <span class="link-url">{{ news.link }}</span>
+                            <a [href]="news.url" target="_blank">
+                                <div class="image-wrapper">
+                                    <img class="news-image" [src]="news.image">
+                                </div>
+                                <span class="link-title">{{ news.title }}</span>
+                                <br>
+                                <span class="link-description">{{ news.description }}</span>
+                                <span class="link-url">{{ news.url }}</span>
+                            </a>
                         </div>
                     </div>
                 </div>

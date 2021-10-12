@@ -11,14 +11,14 @@ export class NewsService {
   constructor(private http: HttpClient) { }
 
   listAllCountyNews(stateId, countyId) {
-    return this.http.get<any>(this.API + 'state/' + stateId + '/county/' + countyId + '/variants');
+    return this.http.get<any>(this.API + 'state/' + stateId + '/county/' + countyId + '/news');
   }
 
   listAllStateNews(stateId) {
-    return this.http.get<any>(this.API + 'state/' + stateId + '/variants');
+    return this.http.get<any>(this.API + 'state/' + stateId + '/news');
   }
 
   listAllRegionNews(regionId) {
-    return this.http.get<any>(this.API + 'region/' + regionId + '/variants');
+    return this.http.get<any>(this.API + 'region/' + regionId + '/news');
   }
 }
