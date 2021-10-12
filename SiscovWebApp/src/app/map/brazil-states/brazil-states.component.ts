@@ -15,6 +15,8 @@ export class BrazilStatesComponent implements OnInit {
 
   states  = [];
   loading: boolean = false;
+  isNewsModalOpen: boolean = false;
+  variantStateId: number;
 
   constructor(private router: Router, private mapService: MapService) { }
 
@@ -92,6 +94,15 @@ export class BrazilStatesComponent implements OnInit {
       return '#b0b840';
     else if(color === '#cf4040')
       return '#a63333'
+  }
+
+  openNewsModal(event) {
+    this.variantStateId = event;
+    this.isNewsModalOpen = true;
+  }
+
+  closeNewsModal() {
+    this.isNewsModalOpen = false;
   }
 
 }

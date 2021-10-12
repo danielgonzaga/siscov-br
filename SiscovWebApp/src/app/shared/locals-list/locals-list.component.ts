@@ -44,6 +44,7 @@ export class LocalsListComponent implements OnInit {
   }
 
   openNewsModal(event) {
+    console.log("locals-list recebendo open. Event: ", event);
     this.onClickOpenNewsModal.emit(event);
   }
 }

@@ -13,6 +13,8 @@ export class BrazilRegionsComponent implements OnInit {
 
   regions = [];
   loading: boolean = false;
+  isNewsModalOpen: boolean = false;
+  variantRegionId: number;
 
   constructor(private mapService: MapService) { }
 
@@ -85,5 +87,14 @@ export class BrazilRegionsComponent implements OnInit {
       return '#b0b840';
     else if(color === '#cf4040')
       return '#a63333'
+  }
+
+  openNewsModal(event) {
+    this.variantRegionId = event;
+    this.isNewsModalOpen = true;
+  }
+
+  closeNewsModal() {
+    this.isNewsModalOpen = false;
   }
 }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NewsService } from './services/news.service';
-import { map } from 'rxjs/operators'
+import { takeUntil } from 'rxjs/operators'
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-news-modal',
@@ -14,32 +15,43 @@ export class NewsModalComponent implements OnInit {
   @Input() variantLocal;
   @Input() variantStateId?;
   @Output() close = new EventEmitter();
-  img = '../../assets/bandeira-acre.png'
   loading: boolean = false;
   news;
-
+  private destroy$ = new Subject<boolean>();
 
   constructor(private newsService: NewsService) { }
 
   ngOnInit(): void {
     this.loading = true;
-    this.newsService.listAllCountyNews(this.variantStateId, this.variantLocal.id)
-    .subscribe(news => {
-      console.log("this.variantLocal: ", this.variantLocal);
-      console.log("this.variantStateId: ", this.variantStateId);
-      this.news = news;
-      this.loading = false;
-    })
-    // setTimeout(() => {
-    //   this.news = [{title: "Variante Delta encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 1}, 
-    //               {title: "Variante Omega encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 2}, 
-    //               {title: "Variante Zeta encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 3}, 
-    //               {title: "Variante Pica-Pau encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 4}, 
-    //               {title: "Variante Gohan encontrada em Acrelândia após examinar paciente vindo do exterior", link: 'https://google.com', id: 5},
-    //               ] 
-    //   this.loading = false;
-    //   console.log("Id do local a se fazer a query: ", this.variantLocal);
-    // }, 3000);
+    if(this.variantLocal.isRegion) {
+      console.log("region varianLocal: ", this.variantLocal);
+      // this.newsService.listAllRegionNews(this.variantLocal.id).pipe(
+      //   takeUntil(this.destroy$)
+      // ).subscribe(news => {
+      //   this.news = news;
+      //   this.loading = false;
+      // })
+    } else if(this.variantLocal.isState) {
+      this.newsService.listAllStateNews(this.variantLocal.id).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(news => {
+        console.log("variantLocal from state: ", this.variantLocal);
+        this.news = news;
+        this.loading = false;
+      })
+    } else if(this.variantLocal.isCounty) {
+      this.newsService.listAllCountyNews(this.variantStateId, this.variantLocal.id).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(news => {
+        this.news = news;
+        this.loading = false;
+      })
+    }
+  }
+
+  ngOnDestroy() {
+    console.log("ngOnDestroy!");
+    this.destroy$.next(true);
   }
 
   closeNewsModal() {

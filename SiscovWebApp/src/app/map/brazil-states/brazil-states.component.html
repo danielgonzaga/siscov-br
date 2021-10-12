@@ -135,9 +135,17 @@
         <app-locals-list 
             [items]="states"
             (onAccordionClick)="onAccordionClick($event)"
+            (onClickOpenNewsModal)="openNewsModal($event)"
         ></app-locals-list>
     </div>
 </div>
 <div class="loader" *ngIf="loading">
     <app-loader></app-loader>
 </div>
+
+<app-news-modal 
+    *ngIf="isNewsModalOpen"
+    [isOpen]="isNewsModalOpen"
+    [variantLocal]="variantStateId"
+    (close)="closeNewsModal()"
+></app-news-modal>

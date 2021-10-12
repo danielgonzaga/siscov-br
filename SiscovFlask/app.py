@@ -66,7 +66,7 @@ def findAllStates():
                 state['isSelected']=False
             
                 # We need news table to set variant cases 
-                state['variantCases']=False
+                state['variantCases']=True
         
                 # Getting total cases per State
                 total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).count()
@@ -101,7 +101,7 @@ def findStateById(state_id):
         state['id'] = state['id']
 
         # We need news table to set variant cases 
-        state['variantCases']=False
+        state['variantCases']=True
 
         # Getting total cases per State
         total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).count()
@@ -153,7 +153,7 @@ def findAllCounties(state_id):
                 county['isRegion']=False
                 county['isCounty']=True
                 county['isSelected']=False
-                county['variantCases']=False
+                county['variantCases']=True
 
                 total_cases = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).count()
                 county['totalCases']=total_cases
@@ -181,7 +181,7 @@ def findCountyById(state_id, county_id):
         county['isRegion']=False
         county['isCounty']=True
         county['isSelected']=False
-        county['variantCases']=False
+        county['variantCases']=True
 
         total_cases = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).count()
         county['totalCases']=total_cases
