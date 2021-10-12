@@ -4,3 +4,4 @@ flask-marshmallow==0.14.0
 marshmallow-sqlalchemy==0.26.1
 pandas==1.3.3
 psycopg2-binary==2.9.1
+linkpreview=0.2.0
