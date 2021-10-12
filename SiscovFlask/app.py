@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, jsonify
-from flask_cors import CORS, cross_origin
-import pip._vendor.requests as req
+from flask import request, jsonify
+from flask_cors import cross_origin
 from models import *
 from utils import *
 import json, os.path
@@ -197,7 +196,7 @@ def findCountyById(state_id, county_id):
         return jsonify(county)
 
 
-@app.route('/region/<region_id>')
+@app.route('/region/<region_id>/news')
 @cross_origin()
 def getRegionMetaURL(region_id):
     if request.method == 'GET':
