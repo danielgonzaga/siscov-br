@@ -8,7 +8,7 @@
             </svg>
                 
         </div>
-        <p-carousel [value]="news" styleClass="custom-carousel" [numVisible]="3" [numScroll]="1" [circular]="true">
+        <p-carousel *ngIf="!loading" [value]="news" styleClass="custom-carousel" [numVisible]="3" [numScroll]="1" [circular]="true">
             <ng-template let-news pTemplate="item">
                 <div class="product-item">
                     <div class="product-item-content">
@@ -16,12 +16,18 @@
                         </div>
                         <div>
                             <img [src]="img" width="100%">
-                            <a [href]="news.link" target="_blank" class="p-mb-1">{{news.title}}</a>
+                            <a class="link-title" [href]="news.link" target="_blank">{{news.title}}</a>
+                            <br>
+                            <span class="link-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac maximus diam, sit amet interdum ipsum. Aliquam vehicula varius justo nec auctor. Nulla a massa sed nisl tempor bibendum sit amet non nulla. Nullam non dignissim augue. Donec faucibus neque ligula, id condimentum tellus ullamcorper in. Donec tincidunt, nulla vel tempor facilisis, nunc justo volutpat justo, eu porttitor ex nibh et lorem. Sed rutrum lectus eu gravida vestibulum. Etiam rutrum elit euismod feugiat ullamcorper.</span>
+                            <span class="link-url">{{ news.link }}</span>
                         </div>
                     </div>
                 </div>
             </ng-template>
         </p-carousel>
+        <div class="loader" *ngIf="loading">
+            <app-loader></app-loader>
+        </div>
     </div>
 </div>
 <div *ngIf="isOpen" class="modal-background"></div>
