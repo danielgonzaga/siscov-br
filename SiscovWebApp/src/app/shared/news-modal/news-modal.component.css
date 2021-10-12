@@ -63,7 +63,7 @@ body.modal-open {
     border-radius: 3px;
     text-align: left;
     padding: 0;
-    width: 85%;
+    width: 20vw;
     min-height: 65vh;
     max-height: 65vh;
     margin: 0 auto
@@ -92,7 +92,8 @@ body.modal-open {
 }
 
 .news-image {
-    width: 100%
+    width: 100%;
+    min-height: 30vh;
 }
 
 .link-description {
