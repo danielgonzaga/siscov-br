@@ -9,7 +9,7 @@
     <h3>{{ item.totalCases | number:'1.0':'en-US' }}</h3>
     <h4>Número de mortes</h4>
     <h3>{{ item.totalDeaths | number:'1.0':'en-US' }}</h3>
-    <div class="variant-button" *ngIf="item.variantCases">
+    <div (click)="openNewsModal()" class="variant-button" *ngIf="item.variantCases">
         Local muito afetado por <b><u>variantes da COVID-19</u></b>
     </div>
     <div class="inner-map-button" (click)="goStatesMap()" *ngIf="item.isRegion">

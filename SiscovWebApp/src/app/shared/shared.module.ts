@@ -10,6 +10,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { LocalsListItemComponent } from './locals-list/components/locals-list-item/locals-list-item.component';
 import { LoaderComponent } from './loader/loader.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { NewsModalComponent } from './news-modal/news-modal.component';
+import { MatLinkPreviewModule } from '@angular-material-extensions/link-preview';
 
 @NgModule({
   declarations: [
@@ -18,19 +21,25 @@ import { LoaderComponent } from './loader/loader.component';
     LocalsListComponent,
     LocalsListItemComponent,
     LoaderComponent,
+    NotFoundComponent,
+    NewsModalComponent,
   ],
   imports: [
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule,
-    AccordionModule
+    AccordionModule,
+    // MatLinkPreviewModule
   ],
   exports: [
     NavbarComponent,
     SearchBarComponent,
     LocalsListComponent,
     LoaderComponent,
+    NotFoundComponent,
+    NewsModalComponent,
   ]
 })
+
 export class SharedModule { }

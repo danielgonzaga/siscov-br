@@ -26,6 +26,7 @@ export class LocalsListComponent implements OnInit {
 
   @Input() items: ILocalsItem[] = [];
   @Output() onAccordionClick = new EventEmitter<string>();
+  @Output() onClickOpenNewsModal = new EventEmitter();
   @ViewChildren(LocalsListItemComponent) viewChildren!: QueryList<LocalsListItemComponent>;
   
   constructor() { }
@@ -40,5 +41,9 @@ export class LocalsListComponent implements OnInit {
   goToScroll(id) {
     let index = _.findIndex(this.items, function(item) { return item.id == id })
     this.viewChildren.toArray()[+index].scrollIntoView()
+  }
+
+  openNewsModal() {
+    this.onClickOpenNewsModal.emit();
   }
 }

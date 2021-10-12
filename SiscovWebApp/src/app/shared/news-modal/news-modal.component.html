@@ -1,0 +1,20 @@
+<div *ngIf="isOpen" class="modal">
+    <div class="modal-body">
+        <div class="modal-header">
+            <span class="modal-title">Notícias sobre variantes - {{ localName }}</span>
+            <svg class="x-icon" (click)="closeNewsModal()" width="20" height="20" viewBox="0 0 80 78" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="75.5355" y1="3.53553" x2="4.82486" y2="74.2462" stroke="black" stroke-width="10"/>
+                <line y1="-5" x2="100" y2="-5" transform="matrix(0.707107 0.707107 0.707107 -0.707107 8 0)" stroke="black" stroke-width="10"/>
+            </svg>
+                
+        </div>
+        <h2>Mundo</h2>
+        <h1>Hello</h1>
+        <h2>World</h2>
+        <h1>Hola</h1>
+        <h2>Mundo</h2>
+        <h1>Spin</h1>
+        <h2>Dash</h2>
+    </div>
+</div>
+<div *ngIf="isOpen" class="modal-background"></div>
