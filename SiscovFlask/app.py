@@ -203,12 +203,10 @@ def getURLMeta(state_id, county_id):
         news_query = Noticias.query.join(noticias_municipio, noticias_municipio.c.noticia_id == Noticias.id).join(Municipio, noticias_municipio.c.municipio_id == Municipio.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).all()
         result = news_schema.dump(news_query)
         print(result)
-        
+
         for news in result:
-            url = news['url']
-            meta_url = link_preview(url)
-            result = ()
-        
+            meta_url = link_preview(news['url'])
+
             news['title'] = meta_url.title
             news['description'] = meta_url.description
             news['image'] =  meta_url.image
