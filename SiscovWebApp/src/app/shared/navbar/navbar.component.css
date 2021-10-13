@@ -33,3 +33,7 @@ mat-sidenav {
     background-color: #fff;
     height: 100%;
 }
+
+.siscov-br {
+    cursor: pointer;
+}
