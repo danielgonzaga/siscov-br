@@ -1,7 +1,11 @@
 <div *ngIf="isOpen" class="modal">
     <div class="modal-body">
         <div class="modal-header">
-            <span class="modal-title">Notícias sobre variantes | {{ variantLocal.nome | titlecase }}</span>
+            <div class="modal-title-wrapper">
+                <span class="modal-title">Notícias sobre variantes</span>
+                <span class="modal-subtitle">{{ variantLocal.nome | titlecase }}</span>
+            </div>
+
             <svg class="x-icon" (click)="closeNewsModal()" width="20" height="20" viewBox="0 0 80 78" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <line x1="75.5355" y1="3.53553" x2="4.82486" y2="74.2462" stroke="black" stroke-width="10"/>
                 <line y1="-5" x2="100" y2="-5" transform="matrix(0.707107 0.707107 0.707107 -0.707107 8 0)" stroke="black" stroke-width="10"/>

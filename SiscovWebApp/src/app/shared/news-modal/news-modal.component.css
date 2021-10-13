@@ -1,44 +1,30 @@
 .modal {
-    /* modal container fixed across whole screen */
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-
-    /* z-index must be higher than .jw-modal-background */
     z-index: 1000;
-    
-    /* enables scrolling for tall modals */
-    /* overflow: auto; */
 }
 
 .modal-body {
-    padding: 20px 30px 30px 30px;
+    padding: 20px 30px 15px 30px;
     background: #fff;
-
-    /* margin exposes part of the modal background */
     margin: 30px 100px 100px 100px;
 }
 
 .modal-background {
-    /* modal background fixed across whole screen */
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-
-    /* semi-transparent black  */
     background-color: #000;
     opacity: 0.75;
-
-    /* z-index must be below .jw-modal and above everything else  */
     z-index: 900;
 }
 
 body.modal-open {
-    /* body overflow is hidden to hide main scrollbar when modal window is open */
     overflow: hidden;
 }
 
@@ -47,10 +33,21 @@ body.modal-open {
     justify-content: space-between;
 }
 
+.modal-title-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 .modal-title {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 3rem;
+}
+
+.modal-subtitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #504f4f;
 }
 
 .x-icon {
@@ -87,6 +84,7 @@ body.modal-open {
 }
 
 .image-wrapper {
+    background-color: #dedede;
     max-height: 30vh;
     overflow: hidden;
 }
