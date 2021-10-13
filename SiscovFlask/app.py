@@ -1,241 +1,158 @@
+from flask import request, jsonify
+from flask_cors import cross_origin
 from models import *
-from sqlalchemy import func
-from linkpreview import link_preview
+from utils import *
+import json, os.path
 
+# Routes
+# (OK) /region -> traz todas as regioes
+# (OK) /region/<region_id>  -> traz uma regiao em especifico
+# (OK) /state -> traz todos os estados
+# (OK) /state/<state_id> -> traz um estado em especifico
+# /state/<state_id>/county -> traz todos os municipios de um estado em especifico
+# /state/<state_id>/county/<county_id> -> traz um municipio em especifico de um estado em especifico
+
+# Noticias:
+# /region/<region_id>/news -> Traz as notícias de uma Região em específico
+# /state/<state_id>/news -> Traz as notícias de um Estado em específico
+# /state/<state_id>/county/<county_id>/news -> Traz as notícias de um Município em específico 
+
+# Init schemas
 state_schema = EstadoSchema()
 states_schema = EstadoSchema(many=True)
 region_schema = RegionSchema()
 regions_schema = RegionSchema(many=True)
 county_schema = CountySchema()
 counties_schema = CountySchema(many=True)
-news_schema = NoticiasSchema()
+news_schema = NoticiasSchema(many=True)
 
-def getStateUFId(state_name):
-    state_dict = {11: 'RONDÔNIA', 12: 'ACRE', 13: 'AMAZONAS', 14: 'RORAIMA', 15: 'PARÁ', 16: 'AMAPÁ', 17: 'TOCANTINS', 21: 'MARANHÃO', 22: 'PIAUÍ', 23: 'CEARÁ', 24: 'RIO GRANDE DO NORTE', 25: 'PARAÍBA', 26: 'PERNAMBUCO', 27: 'ALAGOAS', 28: 'SERGIPE', 29: 'BAHIA', 31: 'MINAS GERAIS', 32: 'ESPÍRITO SANTO', 33: 'RIO DE JANEIRO', 35: 'SÃO PAULO', 41: 'PARANÁ', 42: 'SANTA CATARINA', 43: 'RIO GRANDE DO SUL', 50: 'MATO GROSSO DO SUL', 51: 'MATO GROSSO', 52: 'GOIÁS', 53: 'DISTRITO FEDERAL'}
-    state_id = 0
-    for key, value in state_dict.items():
-        if value == state_name:
-            state_id = key
-    return state_id
+@app.route('/region')
+@cross_origin()
+def findAllRegions():
+    if request.method == 'GET':
+        cache_file = './json/{}.json'.format("regions")
+        cache_exists = os.path.exists(cache_file)
+        
+        if cache_exists:
+            with open(cache_file, 'r', encoding='utf-8') as json_file:
+                result = json.load(json_file)
+        else:
+            result = consultRegions()
+            with open(cache_file, 'w', encoding='utf8') as json_file:
+                json.dump(result, json_file, ensure_ascii=False)
 
-def getStateNameUsingUF(state_uf):
-    state_dict = {11: 'RONDÔNIA', 12: 'ACRE', 13: 'AMAZONAS', 14: 'RORAIMA', 15: 'PARÁ', 16: 'AMAPÁ', 17: 'TOCANTINS', 21: 'MARANHÃO', 22: 'PIAUÍ', 23: 'CEARÁ', 24: 'RIO GRANDE DO NORTE', 25: 'PARAÍBA', 26: 'PERNAMBUCO', 27: 'ALAGOAS', 28: 'SERGIPE', 29: 'BAHIA', 31: 'MINAS GERAIS', 32: 'ESPÍRITO SANTO', 33: 'RIO DE JANEIRO', 35: 'SÃO PAULO', 41: 'PARANÁ', 42: 'SANTA CATARINA', 43: 'RIO GRANDE DO SUL', 50: 'MATO GROSSO DO SUL', 51: 'MATO GROSSO', 52: 'GOIÁS', 53: 'DISTRITO FEDERAL'}
-    state_name = ''
-    for key, value in state_dict.items():
-        if key == state_uf:
-            state_name = value
-    return state_name
+    return jsonify(result)
 
-def getStatesPopulation():
-    population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).first()
-    if population:
-        return population[0]
-    else: 
-        return 0
 
-def getSpecificStatePopulation(state_id):
-    population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter(Estado.id == state_id).first()
-    if population:
-        return population[0]
-    else: 
-        return 0
+@app.route('/region/<region_id>')
+@cross_origin()
+def findRegionById(region_id):
+    if request.method == 'GET':
+        region_json = getRegionData(region_id)
+    return jsonify(region_json)
 
-def getSpecificCountyPopulation(county_id):
-    population = Municipio.query.with_entities(Municipio.populacao).filter(Municipio.id == county_id).first()
-    if population:
-        return population[0]
-    else: 
-        return 0
+@app.route("/state")
+@cross_origin()
+def findAllStates():
+    if request.method == 'GET':
+        cache_file = './json/{}.json'.format("states")
+        cache_exists = os.path.exists(cache_file)
 
-def getSpecificRegionPopulation(region_id):
-    if region_id == 1:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "ACRE") | (Estado.nome == "AMAPÁ") | (Estado.nome == "AMAZONAS") | (Estado.nome == "PARÁ") | (Estado.nome == "RONDÔNIA") | (Estado.nome == "RORAIMA") | (Estado.nome == "TOCANTINS")).first()
-    if region_id == 2:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "ALAGOAS") | (Estado.nome == "BAHIA") | (Estado.nome == "CEARÁ") | (Estado.nome == "MARANHÃO") | (Estado.nome == "PARAÍBA") | (Estado.nome == "PIAUÍ") | (Estado.nome == "PERNAMBUCO") | (Estado.nome == "RIO GRANDE DO NORTE") | (Estado.nome == "SERGIPE")).first()
-    if region_id == 3:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "ESPÍRITO SANTO") | (Estado.nome == "MINAS GERAIS") | (Estado.nome == "RIO DE JANEIRO") | (Estado.nome == "SÃO PAULO")).first()
-    if region_id == 4:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "PARANÁ") | (Estado.nome == "SANTA CATARINA") | (Estado.nome == "RIO GRANDE DO SUL")).first()
-    if region_id == 5:
-        population = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).with_entities(func.sum(Municipio.populacao)).filter((Estado.nome == "GOIÁS") | (Estado.nome == "MATO GROSSO") | (Estado.nome == "MATO GROSSO DO SUL") | (Estado.nome == "DISTRITO FEDERAL")).first()
-    return population[0]
+        if cache_exists:
+            with open(cache_file, 'r', encoding='utf-8') as json_file:
+                result = json.load(json_file)
+        else:
+            all_states = Estado.query.order_by(Estado.nome).all()
+            result = consultStates(all_states)
+            with open(cache_file, 'w', encoding='utf8') as json_file:
+                json.dump(result, json_file, ensure_ascii=False)
 
-def consultRegions():
-    norte_json = getRegionData(1)
-    nordeste_json = getRegionData(2)
-    sudeste_json = getRegionData(3)
-    sul_json = getRegionData(4)
-    centro_oeste_json = getRegionData(5)
+        return jsonify(result)
 
-    result = (centro_oeste_json, nordeste_json, norte_json, sudeste_json, sul_json)
+@app.route("/state/<state_id>")
+@cross_origin()
+def findStateById(state_id):
+    if request.method == 'GET':
+        state_query = Estado.query.filter(Estado.id == state_id).first()
+        state = consultStates(state_query)
+        
+        return jsonify(state)
 
-    return result
+@app.route("/state/<state_name>/id")
+@cross_origin()
+def findStateByName(state_name):
+    if request.method == 'GET':
+        state_query = Estado.query.filter(Estado.nome == state_name).first()
+        state = state_schema.dump(state_query)
 
-def consultStates(query):
-    result = states_schema.dump(query)
+        state['id'] = state['id']
+        state['nome'] = state['nome']
+        
+        return jsonify(state)
 
-    for state in result:
-        state['isState']=True
-        state['isRegion']=False
-        state['isCounty']=False
-        state['isSelected']=False
+@app.route("/state/<state_id>/county")
+@cross_origin()
+def findAllCounties(state_id):
+    if request.method == 'GET':
+        cache_file = './json/{}.json'.format(state_id)
+        cache_exists = os.path.exists(cache_file)
+
+        if cache_exists:
+            with open(cache_file, 'r', encoding='utf-8') as json_file:
+                result = json.load(json_file)
+        else:
+            all_counties = Municipio.query.order_by(Municipio.nome).join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).all()
+            result = consultCounties(all_counties)
+           
+            with open(cache_file, 'w', encoding='utf8') as json_file:
+                json.dump(result, json_file, ensure_ascii=False)
+
+        return jsonify(result)
+
+@app.route("/state/<state_id>/county/<county_id>")
+@cross_origin()
+def findCountyById(state_id, county_id):
+    if request.method == 'GET':
+        county_query = Municipio.query.join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).first()
+        county = consultCounties(county_query)
+
+        return jsonify(county)
+
+@app.route('/region/<region_id>/news')
+@cross_origin()
+def getRegionNews(region_id):
+    if request.method == 'GET':
+        news_query = getNewsFromRegion(region_id)
+        result = news_schema.dump(news_query)
+      
+        result = formatNews(result)
+            
+        return jsonify(result)
+
+@app.route("/state/<state_id>/news")
+@cross_origin()
+def getStateNews(state_id):
+    if request.method == 'GET':
+        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter(Estado.id == state_id).all()
+
+        result = news_schema.dump(news_query)
     
-        # We need news table to set variant cases 
-        state['variantCases']=True
+        result = formatNews(result)
+           
+        return jsonify(result)
 
-        # Getting total cases per State
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).count()
-        state['totalCases']=total_cases
-
-        # Getting total deaths per State
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).filter(Casos.evolucaoCaso=='Óbito').count()
-        state['totalDeaths']=total_deaths
-
-        population=getSpecificStatePopulation(state['id'])
-        state['population']=population
+@app.route("/state/<state_id>/county/<county_id>/news")
+@cross_origin()
+def getCountyNews(state_id, county_id):
+    if request.method == 'GET':
+      
+        news_query = Noticias.query.join(noticias_municipio, noticias_municipio.c.noticia_id == Noticias.id).join(Municipio, noticias_municipio.c.municipio_id == Municipio.id).join(Estado, Municipio.estado_id == Estado.id).filter(Estado.id == state_id).filter(Municipio.id == county_id).all()
         
-        state['color']=colorCalculation(population, total_cases)
+        result = news_schema.dump(news_query)
 
-    return result
+        result = formatNews(result)
 
-def consultCounties(query):
-    result = counties_schema.dump(query)
+        return jsonify(result)
 
-    for county in result:
-        county['isState']=False
-        county['isRegion']=False
-        county['isCounty']=True
-        county['isSelected']=False
-        county['variantCases']=True
-
-        total_cases = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).count()
-        county['totalCases']=total_cases
-
-        total_deaths = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).filter(Casos.evolucaoCaso=='Óbito').count()
-        county['totalDeaths']=total_deaths
-
-        population = getSpecificCountyPopulation(county['id'])
-        county['population']=population
-        
-        county['color']=colorCalculation(population, total_cases)
-    
-    return result
-
-def getRegionData(id):
-    region_id = int(id)
-    region_data = {}
-    if region_id == 1:
-        # Norte
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ACRE") | (Estado.nome == "AMAPÁ") | (Estado.nome == "AMAZONAS") | (Estado.nome == "PARÁ") | (Estado.nome == "RONDÔNIA") | (Estado.nome == "RORAIMA") | (Estado.nome == "TOCANTINS")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ACRE") | (Estado.nome == "AMAPÁ") | (Estado.nome == "AMAZONAS") | (Estado.nome == "PARÁ") | (Estado.nome == "RONDÔNIA") | (Estado.nome == "RORAIMA") | (Estado.nome == "TOCANTINS")).filter(Casos.evolucaoCaso=='Óbito').count()
-        population=getSpecificRegionPopulation(1)
-        region_data["nome"]="Norte"
-        region_data["totalCases"]=total_cases
-        region_data["totalDeaths"]=total_deaths
-        region_data["population"]=population
-        region_data["color"]=colorCalculation(population, total_cases)
-        #print("region_data: ", region_data)
-    elif region_id == 2:
-        # Nordeste
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ALAGOAS") | (Estado.nome == "BAHIA") | (Estado.nome == "CEARÁ") | (Estado.nome == "MARANHÃO") | (Estado.nome == "PARAÍBA") | (Estado.nome == "PIAUÍ") | (Estado.nome == "PERNAMBUCO") | (Estado.nome == "RIO GRANDE DO NORTE") | (Estado.nome == "SERGIPE")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ALAGOAS") | (Estado.nome == "BAHIA") | (Estado.nome == "CEARÁ") | (Estado.nome == "MARANHÃO") | (Estado.nome == "PARAÍBA") | (Estado.nome == "PIAUÍ") | (Estado.nome == "PERNAMBUCO") | (Estado.nome == "RIO GRANDE DO NORTE") | (Estado.nome == "SERGIPE")).filter(Casos.evolucaoCaso=='Óbito').count()
-        population=getSpecificRegionPopulation(2)
-        region_data["nome"]="Nordeste"
-        region_data["totalCases"]=total_cases
-        region_data["totalDeaths"]=total_deaths
-        region_data["population"]=population
-        region_data["color"]=colorCalculation(population, total_cases)
-    elif region_id == 3:
-        # Sudeste
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ESPÍRITO SANTO") | (Estado.nome == "MINAS GERAIS") | (Estado.nome == "RIO DE JANEIRO") | (Estado.nome == "SÃO PAULO")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "ESPÍRITO SANTO") | (Estado.nome == "MINAS GERAIS") | (Estado.nome == "RIO DE JANEIRO") | (Estado.nome == "SÃO PAULO")).filter(Casos.evolucaoCaso=='Óbito').count()
-        population=getSpecificRegionPopulation(3)
-        region_data["nome"]="Sudeste"
-        region_data["totalCases"]=total_cases
-        region_data["totalDeaths"]=total_deaths
-        region_data["population"]=population
-        region_data["color"]=colorCalculation(population, total_cases)
-    elif region_id == 4:
-        # Sul
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "PARANÁ") | (Estado.nome == "SANTA CATARINA") | (Estado.nome == "RIO GRANDE DO SUL")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "PARANÁ") | (Estado.nome == "SANTA CATARINA") | (Estado.nome == "RIO GRANDE DO SUL")).filter(Casos.evolucaoCaso=='Óbito').count()
-        population=getSpecificRegionPopulation(4)
-        region_data["nome"]="Sul"
-        region_data["totalCases"]=total_cases
-        region_data["totalDeaths"]=total_deaths
-        region_data["population"]=population
-        region_data["color"]=colorCalculation(population, total_cases)
-    elif region_id == 5:
-        # Centro-Oeste
-        total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "GOIÁS") | (Estado.nome == "MATO GROSSO") | (Estado.nome == "MATO GROSSO DO SUL") | (Estado.nome == "DISTRITO FEDERAL")).count()
-        total_deaths = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter((Estado.nome == "GOIÁS") | (Estado.nome == "MATO GROSSO") | (Estado.nome == "MATO GROSSO DO SUL") | (Estado.nome == "DISTRITO FEDERAL")).filter(Casos.evolucaoCaso=='Óbito').count()
-        population=getSpecificRegionPopulation(5)
-        region_data["nome"]="Centro-Oeste"
-        region_data["totalCases"]=total_cases
-        region_data["totalDeaths"]=total_deaths
-        region_data["population"]=population
-        region_data["color"]=colorCalculation(population, total_cases)
-    
-    region_data["isRegion"]=True
-    region_data["isState"]=False
-    region_data["isCounty"]=False
-    region_data['isSelected']=False
-    region_data['variantCases']=True
-    return region_data
-
-def getNewsFromRegion(id):
-    region_id = int(id)
-    #region_data = {}
-    if region_id == 1:
-        # Norte
-        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 11) | (Estado.id == 12) | (Estado.id == 13) | (Estado.id == 14) | (Estado.id == 15) | (Estado.id == 16) | (Estado.id == 17)).all()
-        
-        
-    elif region_id == 2:
-        # Nordeste
-        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 21) | (Estado.id == 22) | (Estado.id == 23) | (Estado.id == 24) | (Estado.id == 25) | (Estado.id == 26) | (Estado.id == 27) | (Estado.id == 28) | (Estado.id == 29)).all()
-
-    elif region_id == 3:
-        # Sudeste
-        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 31) | (Estado.id == 32) | (Estado.id == 33) | (Estado.id == 35)).all()
-
-    elif region_id == 4:
-        # Sul
-        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 41) | (Estado.id == 42) | (Estado.id == 43)).all()
-
-    elif region_id == 5:
-        # Centro-Oeste
-        news_query = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.id == 50) | (Estado.id == 51) | (Estado.id == 52) | (Estado.id == 53)).all()
-
-    return news_query
-
-def formatNews(result):
-    for news in result:
-        try:
-            meta_url = link_preview(news['url'])
-
-            news['title'] = meta_url.title
-            news['description'] = meta_url.description
-            news['image'] =  meta_url.image
-            news['force_title'] = meta_url.force_title
-            news['absolute_image'] = meta_url.absolute_image
-        except: 
-            print('Unable to get metadata from url')
-    return result
-
-def colorCalculation(population, total_cases):
-    if population:
-        calculation = total_cases * (100000)/population
-    else:
-        calculation = 0
-    color = ''
-    if calculation >= 0 and calculation < 6000:
-        # Blue
-        color = '#0377fc'
-    elif calculation >= 6000 and calculation < 12000:
-        # Yellow
-        color = '#dce650'
-    elif calculation >= 12000:
-        # Red
-        color = '#cf4040'
-    return color
+if __name__ == '__main__':
+    app.run()
