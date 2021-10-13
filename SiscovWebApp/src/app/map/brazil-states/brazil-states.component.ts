@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ILocalsItem, LocalsListComponent } from 'src/app/shared/locals-list/locals-list.component';
+import { LocalsListComponent } from 'src/app/shared/locals-list/locals-list.component';
 import * as _ from 'lodash';
 import { MapService } from '../services/map.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-brazil-states',
@@ -17,21 +19,27 @@ export class BrazilStatesComponent implements OnInit {
   loading: boolean = false;
   isNewsModalOpen: boolean = false;
   variantStateId: number;
+  private destroy$ = new Subject<boolean>();
 
   constructor(private router: Router, private mapService: MapService) { }
 
   ngOnInit(): void {
     this.loading = true;
-    this.mapService.listAllStates().subscribe(state => {
+    this.mapService.listAllStates().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(state => {
       this.loading = false;
       this.states = state
       this.colorizeLocals();
     })
   }
 
+  ngOnDestroy() {
+    this.destroy$.next(true);
+  }
+
   colorizeLocals() {
     this.states.forEach(state => {
-      // const normalizedStateName = state.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g,"_");
       try {
         (document.querySelector('#est_' + state.id) as HTMLElement).style.fill = state.color;
       } catch {
@@ -90,8 +98,8 @@ export class BrazilStatesComponent implements OnInit {
   verifyColor(color) {
     if(color === '#0377fc')
       return '#025fca';
-    else if(color === '#dce650')
-      return '#b0b840';
+      else if(color === '#f6c146')
+      return '#c59a38';
     else if(color === '#cf4040')
       return '#a63333'
   }

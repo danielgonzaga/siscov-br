@@ -24,34 +24,54 @@ export class NewsModalComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     if(this.variantLocal.isRegion) {
-      console.log("region varianLocal: ", this.variantLocal);
-      // this.newsService.listAllRegionNews(this.variantLocal.id).pipe(
-      //   takeUntil(this.destroy$)
-      // ).subscribe(news => {
-      //   this.news = news;
-      //   this.loading = false;
-      // })
+      this.getAllRegionNews()
     } else if(this.variantLocal.isState) {
-      this.newsService.listAllStateNews(this.variantLocal.id).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe(news => {
-        console.log("variantLocal from state: ", this.variantLocal);
-        this.news = news;
-        this.loading = false;
-      })
+      this.getAllStateNews();
     } else if(this.variantLocal.isCounty) {
-      this.newsService.listAllCountyNews(this.variantStateId, this.variantLocal.id).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe(news => {
-        this.news = news;
-        this.loading = false;
-      })
+      this.getAllCountiesNews();
     }
   }
 
   ngOnDestroy() {
-    console.log("ngOnDestroy!");
     this.destroy$.next(true);
+  }
+
+  getAllRegionNews() {
+    let regionId: number;
+      if(this.variantLocal.id === 'Norte')
+        regionId = 1
+      else if(this.variantLocal.id === 'Nordeste')
+        regionId = 2
+      else if(this.variantLocal.id === 'Sudeste')
+        regionId = 3
+      else if(this.variantLocal.id === 'Sul')
+        regionId = 4
+      else if(this.variantLocal.id === 'Centro-Oeste')
+        regionId = 5
+      this.newsService.listAllRegionNews(regionId).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(news => {
+        this.news = news;
+        this.loading = false;
+      })
+  }
+
+  getAllStateNews() {
+    this.newsService.listAllStateNews(this.variantLocal.id).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(news => {
+      this.news = news;
+      this.loading = false;
+    })
+  }
+
+  getAllCountiesNews() {
+    this.newsService.listAllCountyNews(this.variantStateId, this.variantLocal.id).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(news => {
+      this.news = news;
+      this.loading = false;
+    })
   }
 
   closeNewsModal() {

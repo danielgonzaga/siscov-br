@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ILocalsItem } from 'src/app/shared/locals-list/locals-list.component';
 import * as _ from 'lodash';
 import { MapService } from '../services/map.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-brazil-regions',
@@ -15,17 +17,23 @@ export class BrazilRegionsComponent implements OnInit {
   loading: boolean = false;
   isNewsModalOpen: boolean = false;
   variantRegionId: number;
+  private destroy$ = new Subject<boolean>();
 
   constructor(private mapService: MapService) { }
 
   ngOnInit(): void {
     this.loading = true;
-    this.mapService.listAllRegions().subscribe(region => {
+    this.mapService.listAllRegions().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(region => {
       this.regions = region
       this.loading = false;
       this.colorizeLocals();
     })
-    
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
   }
 
   colorizeLocals() {
@@ -83,8 +91,8 @@ export class BrazilRegionsComponent implements OnInit {
   verifyColor(color) {
     if(color === '#0377fc')
       return '#025fca';
-    else if(color === '#dce650')
-      return '#b0b840';
+      else if(color === '#f6c146')
+      return '#c59a38';
     else if(color === '#cf4040')
       return '#a63333'
   }

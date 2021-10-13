@@ -16,7 +16,6 @@ export class NavbarComponent implements OnInit {
 
   abrir() {
     this.toggleSideMenu = !this.toggleSideMenu;
-    console.log("toggleSideMenu: ", this.toggleSideMenu);
   }
 
 }
