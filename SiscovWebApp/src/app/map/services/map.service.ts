@@ -21,8 +21,4 @@ export class MapService {
   listAllCounties(stateId) {
     return this.http.get<any>(this.API + 'state/' + stateId + '/county');
   }
-
-  findStateByName(stateName) {
-    return this.http.get<any>(this.API + 'state/' + stateName + '/id');
-  }
 }
