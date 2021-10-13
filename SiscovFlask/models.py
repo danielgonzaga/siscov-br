@@ -55,10 +55,11 @@ class Noticias(db.Model):
     municipio_noticia = db.relationship('Municipio', secondary='noticias_municipio')
     estado_noticia = db.relationship('Estado', secondary='noticias_estado')
 
-    def __init__(self, url, municipio_noticia, estado_noticia):
+    def __init__(self, id, url):
+        self.id = id
         self.url = url
-        self.municipio_noticia = municipio_noticia
-        self.estado_noticia = estado_noticia
+        #self.municipio_noticia = municipio_noticia
+        #self.estado_noticia = estado_noticia
 
 noticias_municipio = db.Table('noticias_municipio',
     db.Column('noticia_id', db.Integer, db.ForeignKey(Noticias.id), primary_key=True),

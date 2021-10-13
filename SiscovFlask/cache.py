@@ -44,4 +44,4 @@ def cacheStateCounties():
 if __name__ == '__main__':
     cacheRegions()
     cacheStates()
-    #cacheStateCounties()
+    cacheStateCounties()
