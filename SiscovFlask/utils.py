@@ -81,7 +81,7 @@ def consultStates(query):
         state['isSelected']=False
     
         # We need news table to set variant cases 
-        state['variantCases']=True
+        state['variantCases']=getStateVariantAlert(state['id'])
 
         # Getting total cases per State
         total_cases = Estado.query.join(Municipio, Municipio.estado_id == Estado.id).join(Casos, Casos.municipio_id == Municipio.id).filter(Estado.nome==state['nome']).count()
@@ -106,7 +106,7 @@ def consultCounties(query):
         county['isRegion']=False
         county['isCounty']=True
         county['isSelected']=False
-        county['variantCases']=True
+        county['variantCases']=getCountyVariantAlert(county['id'])
 
         total_cases = Municipio.query.join(Casos, Municipio.id == Casos.municipio_id).filter(Municipio.id==county['id']).count()
         county['totalCases']=total_cases
@@ -180,7 +180,7 @@ def getRegionData(id):
     region_data["isState"]=False
     region_data["isCounty"]=False
     region_data['isSelected']=False
-    region_data['variantCases']=True
+    region_data['variantCases']=getRegionAlert(region_id)
     return region_data
 
 def getNewsFromRegion(id):
@@ -223,6 +223,42 @@ def formatNews(result):
             print('Unable to get metadata from url')
     return result
 
+def getRegionAlert(region_id):
+    if region_id == 1:
+        # Norte
+        has_variant_cases = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.nome == "ACRE") | (Estado.nome == "AMAPÁ") | (Estado.nome == "AMAZONAS") | (Estado.nome == "PARÁ") | (Estado.nome == "RONDÔNIA") | (Estado.nome == "RORAIMA") | (Estado.nome == "TOCANTINS")).first()
+    elif region_id == 2:
+        # Nordeste
+        has_variant_cases = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.nome == "ALAGOAS") | (Estado.nome == "BAHIA") | (Estado.nome == "CEARÁ") | (Estado.nome == "MARANHÃO") | (Estado.nome == "PARAÍBA") | (Estado.nome == "PIAUÍ") | (Estado.nome == "PERNAMBUCO") | (Estado.nome == "RIO GRANDE DO NORTE") | (Estado.nome == "SERGIPE")).first()
+    elif region_id == 3:
+        # Sudeste
+        has_variant_cases = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.nome == "ESPÍRITO SANTO") | (Estado.nome == "MINAS GERAIS") | (Estado.nome == "RIO DE JANEIRO") | (Estado.nome == "SÃO PAULO")).first()
+      
+    elif region_id == 4:
+        # Sul
+        has_variant_cases = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.nome == "PARANÁ") | (Estado.nome == "SANTA CATARINA") | (Estado.nome == "RIO GRANDE DO SUL")).first()
+    elif region_id == 5:
+        # Centro-Oeste
+        has_variant_cases = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter((Estado.nome == "GOIÁS") | (Estado.nome == "MATO GROSSO") | (Estado.nome == "MATO GROSSO DO SUL") | (Estado.nome == "DISTRITO FEDERAL")).first()
+    
+    if has_variant_cases:
+        return True
+    return False 
+
+def getStateVariantAlert(state_id):
+    has_variant_cases = Noticias.query.join(noticias_estado, noticias_estado.c.noticia_id == Noticias.id).join(Estado, noticias_estado.c.estado_id == Estado.id).filter(Estado.id == state_id).first()
+
+    if has_variant_cases:
+        return True
+    return False 
+
+def getCountyVariantAlert(county_id):
+    has_variant_cases = Noticias.query.join(noticias_municipio, noticias_municipio.c.noticia_id == Noticias.id).join(Municipio, noticias_municipio.c.municipio_id == Municipio.id).filter(Municipio.id == county_id).first()
+
+    if has_variant_cases:
+        return True
+    return False
+
 def colorCalculation(population, total_cases):
     if population:
         calculation = total_cases * (100000)/population
@@ -234,7 +270,7 @@ def colorCalculation(population, total_cases):
         color = '#0377fc'
     elif calculation >= 6000 and calculation < 12000:
         # Yellow
-        color = '#dce650'
+        color = '#F6C146'
     elif calculation >= 12000:
         # Red
         color = '#cf4040'

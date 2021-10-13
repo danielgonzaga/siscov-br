@@ -1,4 +1,4 @@
-from models import db, Estado, EstadoSchema, Municipio, CountySchema, Casos
+from models import db, Estado, EstadoSchema, Municipio, CountySchema 
 from utils import consultStates, consultCounties, consultRegions
 import json
 
