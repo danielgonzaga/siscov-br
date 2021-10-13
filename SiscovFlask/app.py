@@ -122,7 +122,11 @@ def findCountyById(state_id, county_id):
 @cross_origin()
 def getRegionNews(region_id):
     if request.method == 'GET':
+<<<<<<< HEAD
         news_query = getRegionNewsQuery(region_id)
+=======
+        news_query = getNewsFromRegion(region_id)
+>>>>>>> 0d351b27e88b519bd4b917dc8609b754db60cd22
         result = news_schema.dump(news_query)
       
         result = formatNews(result)
