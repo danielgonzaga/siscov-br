@@ -183,7 +183,7 @@ def getRegionData(id):
     region_data['variantCases']=True
     return region_data
 
-def getRegionNews(id):
+def getNewsFromRegion(id):
     region_id = int(id)
     #region_data = {}
     if region_id == 1:
@@ -211,29 +211,31 @@ def getRegionNews(id):
 
 def formatNews(result):
     for news in result:
-        meta_url = link_preview(news['url'])
+        try:
+            meta_url = link_preview(news['url'])
 
-        news['title'] = meta_url.title
-        news['description'] = meta_url.description
-        news['image'] =  meta_url.image
-        news['force_title'] = meta_url.force_title
-        news['absolute_image'] = meta_url.absolute_image
-
+            news['title'] = meta_url.title
+            news['description'] = meta_url.description
+            news['image'] =  meta_url.image
+            news['force_title'] = meta_url.force_title
+            news['absolute_image'] = meta_url.absolute_image
+        except: 
+            print('Unable to get metadata from url')
     return result
 
 def colorCalculation(population, total_cases):
     if population:
-        calculation = total_cases/population
+        calculation = total_cases * (100000)/population
     else:
         calculation = 0
     color = ''
-    if calculation >= 0 and calculation < 0.35:
+    if calculation >= 0 and calculation < 6000:
         # Blue
         color = '#0377fc'
-    elif calculation >= 0.35 and calculation < 75:
+    elif calculation >= 6000 and calculation < 12000:
         # Yellow
         color = '#dce650'
-    elif calculation >= 75:
+    elif calculation >= 12000:
         # Red
         color = '#cf4040'
     return color
