@@ -183,7 +183,7 @@ def getRegionData(id):
     region_data['variantCases']=True
     return region_data
 
-def getRegionNews(id):
+def getRegionNewsQuery(id):
     region_id = int(id)
     #region_data = {}
     if region_id == 1:
