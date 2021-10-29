@@ -96,11 +96,12 @@ export class BrazilStatesComponent implements OnInit {
   }
 
   verifyColor(color) {
-    if(color === '#0377fc')
+    const colorLowerCase = color.toLowerCase();
+    if(colorLowerCase === '#0377fc')
       return '#025fca';
-      else if(color === '#f6c146')
+      else if(colorLowerCase === '#f6c146')
       return '#c59a38';
-    else if(color === '#cf4040')
+    else if(colorLowerCase === '#cf4040')
       return '#a63333'
   }
 
